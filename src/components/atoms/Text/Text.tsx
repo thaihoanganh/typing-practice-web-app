@@ -40,7 +40,7 @@ enum COLORS {
   contrast = "text-contrast text-opacity-87",
 }
 
-const Text: React.FC<TextProps> = ({
+export const Text: React.FC<TextProps> = ({
   as,
   className,
   children,
