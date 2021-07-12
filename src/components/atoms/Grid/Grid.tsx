@@ -11,7 +11,7 @@ export interface GridProps
 enum COLORS {
   primary = "bg-primary",
   secondary = "bg-secondary",
-  accent = "bg-accent",
+  danger = "bg-accent",
   contrast = "bg-contrast",
 }
 
