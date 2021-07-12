@@ -8,7 +8,7 @@ export interface ModalProps {
   onClickOutside?: () => void;
 }
 
-const Modal: React.FC<ModalProps> = ({ children, isOpen, onClickOutside }) => {
+export const Modal: React.FC<ModalProps> = ({ children, isOpen, onClickOutside }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
