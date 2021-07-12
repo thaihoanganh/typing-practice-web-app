@@ -6,7 +6,7 @@ export interface ListProps
   bordered?: boolean;
 }
 
-const List: React.FC<ListProps> = ({ bordered, children, ...otherProps }) => {
+export const List: React.FC<ListProps> = ({ bordered, children, ...otherProps }) => {
   return (
     <ul {...otherProps}>
       {Children.map(children, (child, index) => {
