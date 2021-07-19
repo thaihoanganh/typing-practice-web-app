@@ -1,4 +1,4 @@
 export * from "./entity";
 export * from "./providers";
-export * from "./hook";
-export * from "./service";
+export * from "./hooks";
+export * from "./services";
