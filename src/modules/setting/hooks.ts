@@ -10,7 +10,7 @@ export const useSetting = () => {
   };
 
   return {
-    setting: settingState,
+    settingState,
     onHandleUpdateSetting,
   };
 };
