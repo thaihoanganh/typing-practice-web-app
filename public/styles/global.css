@@ -2,6 +2,12 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@600&display=swap");
+
+.font-roboto-mono {
+  font-family: "Roboto Mono", monospace;
+}
+
 .character {
   border-left: 1px solid transparent;
 }
