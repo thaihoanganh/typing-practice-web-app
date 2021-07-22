@@ -6,6 +6,7 @@ export interface IPracticeState {
   isCheckAfterWord: boolean;
   isCompleted: boolean;
   isReady: boolean;
+  isTyping: boolean;
   practiceData: {
     characterCode: number;
     isCurson: boolean;
@@ -36,6 +37,7 @@ export const PracticeProvider: React.FC = ({ children }) => {
     isCheckAfterWord: false,
     isCompleted: false,
     isReady: false,
+    isTyping: false,
     practiceData: [],
     statistical: {
       accuracy: null,
@@ -47,8 +49,43 @@ export const PracticeProvider: React.FC = ({ children }) => {
     },
   });
 
-  // TODO Thống kê sau khi hoàn thành
-  useEffect(() => {}, [state.isCompleted]);
+  useEffect(() => {
+    if (state.isCompleted) {
+      let totalCharactersIncorrect = 0;
+      let totalWordsIncorrect = 0;
+      state.practiceData.map((word) => {
+        let isIncorrect = false;
+        word.map((character) => {
+          if (character.isIncorrect) {
+            totalCharactersIncorrect += 1;
+            isIncorrect = true;
+          }
+        });
+        totalWordsIncorrect += Number(isIncorrect);
+      });
+
+      const totalCharacters: any = state.statistical.totalCharacters;
+      const totalWords: any = state.statistical.totalWords;
+      const timeStart: any = state.practiceData[0][0].typedAt;
+      const timeEnd: any = state.practiceData[state.cursonWord][state.cursonCharacter].typedAt;
+      const totalTime = (timeEnd - timeStart) / 1000;
+      const accuracy = 1 - totalCharactersIncorrect / totalCharacters;
+      const wpm = totalWords / (totalTime / 60);
+
+      setState((prevSatte) => ({
+        ...prevSatte,
+        statistical: {
+          ...prevSatte.statistical,
+          accuracy,
+          wpm,
+          totalWordsIncorrect,
+          totalTime,
+        },
+      }));
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.isCompleted]);
 
   const exportValue: IPracticeContext = useMemo(() => {
     return {
