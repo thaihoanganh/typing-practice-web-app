@@ -80,6 +80,8 @@ module.exports = {
   },
   variants: {
     extend: {
+      margin: ["first", "last"],
+      padding: ["first", "last"],
       borderColor: ["disabled", "hover", "focus", "active"],
       backgroundColor: ["disabled", "hover", "focus", "active"],
       backgroundOpacity: ["disabled", "hover", "focus", "active"],

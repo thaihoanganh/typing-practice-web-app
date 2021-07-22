@@ -4,13 +4,13 @@ import { UserContext, IUserState, updateUserInLocalService } from ".";
 export const useUser = () => {
   const { userState, userSetState } = useContext(UserContext);
 
-  const onHandleChangeUser = (value: IUserState) => {
+  const onHandleUpdateUser = (value: IUserState) => {
     userSetState(value);
     updateUserInLocalService(value);
   };
 
   return {
-    user: userState,
-    onHandleChangeUser,
+    userState,
+    onHandleUpdateUser,
   };
 };

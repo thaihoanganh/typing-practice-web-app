@@ -1,4 +1,4 @@
-import "../assets/styles/globals.css";
+import "../../public/styles/global.css";
 import type { AppProps } from "next/app";
 
 import { UserProvider } from "@/modules/user/providers";
