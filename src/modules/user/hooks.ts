@@ -1,16 +1,11 @@
-import { useContext } from "react";
-import { UserContext, IUserState, updateUserInLocalService } from ".";
+import { UserContext } from ".";
 
 export const useUser = () => {
-  const { userState, userSetState } = useContext(UserContext);
-
-  const onHandleUpdateUser = (value: IUserState) => {
-    userSetState(value);
-    updateUserInLocalService(value);
-  };
+  const { status, errorMessage, entity } = UserContext.getState();
 
   return {
-    userState,
-    onHandleUpdateUser,
+    userStatus: status,
+    userErrorMessage: errorMessage,
+    user: entity,
   };
 };

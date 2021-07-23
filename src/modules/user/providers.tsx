@@ -1,38 +1,37 @@
-import React, { createContext, useState, useEffect, useMemo } from "react";
-import { IUserEntity, getUserInLocalService, updateUserInLocalService } from ".";
+import React, { useState, useEffect, useMemo } from "react";
+import { IProviderState } from "@/utils/provider";
+import { createAppContext } from "@/utils/context";
+import { IUserEntity, actionGetUser } from ".";
 
-export interface IUserState extends IUserEntity {}
+export type IUserProvider = IProviderState<IUserEntity>;
 
-export interface IUserContext {
-  userState: IUserState;
-  userSetState: React.Dispatch<React.SetStateAction<IUserState>>;
-}
+export const UserContext = createAppContext<IUserProvider>();
 
-export interface UserProviderProps {
-  initState?: IUserState;
-}
-
-export const UserContext = createContext({} as IUserContext);
-
-export const UserProvider: React.FC<UserProviderProps> = ({ children, initState }) => {
-  const [state, setState] = useState<IUserState>({} as IUserState);
+export const UserProvider: React.FC = ({ children }) => {
+  const [state, setState] = useState<IUserProvider>({
+    status: "loading",
+    errorMessage: null,
+    entity: {
+      _id: null,
+      username: null,
+      email: null,
+      currentLesson: 3,
+      createdAt: null,
+    },
+  });
 
   useEffect(() => {
-    if (initState) {
-      updateUserInLocalService(initState);
-      return setState(initState);
-    }
-    const user = getUserInLocalService();
-    return setState(user);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    actionGetUser();
   }, []);
 
-  const exportValue = useMemo<IUserContext>(() => {
+  const exportValue = useMemo(() => {
     return {
-      userState: state,
-      userSetState: setState,
+      state,
+      setState,
     };
   }, [state]);
 
   return <UserContext.Provider value={exportValue}>{children}</UserContext.Provider>;
 };
+
+export default UserProvider;
