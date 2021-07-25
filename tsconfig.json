@@ -20,7 +20,8 @@
       "@/containers/*": ["src/containers/*"],
       "@/helpers/*": ["src/helpers/*"],
       "@/modules/*": ["src/modules/*"],
-      "@/pages/*": ["src/pages/*"]
+      "@/pages/*": ["src/pages/*"],
+      "@/utils/*": ["src/utils/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
