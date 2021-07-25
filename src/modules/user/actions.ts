@@ -1,29 +1,33 @@
+import Joi from "joi";
 import { readLocalStorage, writeLocalStorage } from "@/helpers/localStorage";
-import { IUserState } from ".";
+import { IUserEntity, UserContext } from ".";
 
-export const getUserInLocalService = (): IUserState => {
-  // TODO: xác thực getUser
-  const user: any = readLocalStorage("user");
-  const initialUser: IUserState = {
-    _id: null,
-    username: null,
-    email: null,
-    currentLesson: 3,
-    createdAt: null,
-  };
-  if (user) {
-    return {
-      ...initialUser,
-      currentLesson: user.currentLesson,
-    };
-  } else {
-    updateUserInLocalService(initialUser);
-    return initialUser;
-  }
+export const actionGetUser = () => {
+  const userSchema = Joi.object({
+    currentLesson: Joi.number().min(1).default(1),
+  });
+  const getUser = readLocalStorage("user");
+  const userValidate = userSchema.validate(getUser);
+
+  if (userValidate.error) writeLocalStorage("user", { currentLesson: 1 });
+
+  UserContext.setState((prevState) => ({
+    ...prevState,
+    status: "READY",
+    entity: {
+      ...prevState.entity,
+      currentLesson: userValidate.value.currentLesson,
+    },
+  }));
 };
 
-export const updateUserInLocalService = (value: IUserState): void => {
-  writeLocalStorage("user", {
-    currentLesson: value.currentLesson,
-  });
+export const actionUpdateUser = (updateUserValue: Partial<IUserEntity>) => {
+  writeLocalStorage("user", { currentLesson: updateUserValue.currentLesson });
+  UserContext.setState((prevState) => ({
+    ...prevState,
+    entity: {
+      ...prevState.entity,
+      ...updateUserValue,
+    },
+  }));
 };
