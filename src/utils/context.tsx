@@ -1,6 +1,7 @@
 import React, { createContext } from "react";
 
 export function createAppContext<T>(initialState?: Partial<T>): {
+  initial: React.Context<T>;
   Provider: (props: {
     value: {
       state: T;
@@ -21,6 +22,7 @@ export function createAppContext<T>(initialState?: Partial<T>): {
   };
 
   return {
+    initial: Context,
     // eslint-disable-next-line react/display-name
     Provider: ({ value: { state, setState }, children }) => {
       setContextValue = setState;
