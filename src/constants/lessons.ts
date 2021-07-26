@@ -1,8 +1,9 @@
-export const LESSONS: ILessons = {
-  en: {
+export const LESSONS: ILessons[] = [
+  {
+    name: "Tiếng anh",
     data: [
-      101, 110, 105, 116, 114, 108, 115, 97, 117, 111, 100, 121, 99, 104, 103, 109, 112, 98, 107,
-      118, 119, 102, 122, 120, 113, 106,
+      101, 110, 105, 116, 114, 108, 115, 97, 117, 111, 100, 121, 99, 104, 103, 109, 112, 98, 107, 118, 119, 102, 122,
+      120, 113, 106,
     ],
     wordLength: [
       {
@@ -27,7 +28,7 @@ export const LESSONS: ILessons = {
       },
     ],
   },
-};
+];
 
 export const LESSON_CONFIG: ILessonConfig = {
   hightPracticeRate: 0.15,
@@ -36,8 +37,9 @@ export const LESSON_CONFIG: ILessonConfig = {
   emergencyPracticeRate: 0.1,
 };
 
-export const LESSON_LEVEL: ILessonLevel = {
-  easy: {
+export const LESSON_LEVEL: ILessonLevel[] = [
+  {
+    name: "Dễ",
     accuracy: {
       min: 0.8,
       max: 1,
@@ -47,7 +49,8 @@ export const LESSON_LEVEL: ILessonLevel = {
       max: 50,
     },
   },
-  normal: {
+  {
+    name: "Trung bình",
     accuracy: {
       min: 0.85,
       max: 1,
@@ -57,7 +60,8 @@ export const LESSON_LEVEL: ILessonLevel = {
       max: 75,
     },
   },
-  hard: {
+  {
+    name: "Khó",
     accuracy: {
       min: 0.9,
       max: 1,
@@ -67,7 +71,8 @@ export const LESSON_LEVEL: ILessonLevel = {
       max: 100,
     },
   },
-  custom: {
+  {
+    name: "Tuỳ Chỉnh",
     accuracy: {
       min: 0.85,
       max: 1,
@@ -77,4 +82,4 @@ export const LESSON_LEVEL: ILessonLevel = {
       max: 75,
     },
   },
-};
+];
