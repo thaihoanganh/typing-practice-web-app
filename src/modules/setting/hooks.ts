@@ -1,16 +1,11 @@
-import { useContext } from "react";
-import { SettingContext, ISettingState, updateSettingInLocalService } from ".";
+import { SettingContext } from ".";
 
 export const useSetting = () => {
-  const { settingState, setSettingState } = useContext(SettingContext);
-
-  const onHandleUpdateSetting = (value: ISettingState) => {
-    updateSettingInLocalService(value);
-    setSettingState(value);
-  };
+  const { status: settingStatus, errorMessage: settingErrorMessage, entity: setting } = SettingContext.getState();
 
   return {
-    settingState,
-    onHandleUpdateSetting,
+    settingStatus,
+    settingErrorMessage,
+    setting,
   };
 };

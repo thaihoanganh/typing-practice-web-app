@@ -1,49 +1,56 @@
-import { createContext, useState, useEffect, useMemo } from "react";
-import { getSettingInLocalService } from ".";
+import React, { useState, useEffect, useMemo } from "react";
+import { LESSONS, LESSON_LEVEL } from "@/constants/lessons";
+import { createAppContext } from "@/utils/context";
+import { ISettingEntity, actionGetSetting, actionUpdateTheme } from ".";
 
 export interface ISettingState {
-  themeMode: {
-    options: ["light", "dark"];
-    selected: string;
-  };
-  lesson: {
-    options: ILessons;
-    selected: string;
-  };
-  level: {
-    options: ILessonLevel;
-    selected: string;
-  };
+  status: "READY" | "LOADING" | "ERROR";
+  errorMessage: null | string;
+  entity: ISettingEntity;
 }
 
-export interface ISettingContext {
-  settingState: ISettingState;
-  setSettingState: React.Dispatch<React.SetStateAction<ISettingState>>;
-}
-
-export const SettingContext = createContext({} as ISettingContext);
+export const SettingContext = createAppContext<ISettingState>();
 
 export const SettingProvider: React.FC = ({ children }) => {
-  const [state, setState] = useState({} as ISettingState);
+  const [state, setState] = useState<ISettingState>({
+    status: "LOADING",
+    errorMessage: null,
+    entity: {
+      theme: {
+        options: [
+          {
+            brand: "#000000",
+          },
+        ],
+        selected: 0,
+      },
+      sound: {
+        options: ["on", "off"],
+        selected: 0,
+      },
+      lesson: {
+        options: LESSONS,
+        selected: 0,
+      },
+      level: {
+        options: LESSON_LEVEL,
+        selected: 0,
+      },
+    },
+  });
 
   useEffect(() => {
-    const setting = getSettingInLocalService();
-    setState(setting);
+    actionGetSetting();
   }, []);
 
   useEffect(() => {
-    if (state.themeMode) {
-      document.body.className = state.themeMode.selected;
+    if (state.status === "READY") {
+      actionUpdateTheme(state.entity);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.themeMode]);
+  }, [state.entity]);
 
-  const exportValue = useMemo<ISettingContext>(() => {
-    return {
-      settingState: state,
-      setSettingState: setState,
-    };
-  }, [state]);
+  const exportValue = useMemo(() => ({ state, setState }), [state]);
 
   return <SettingContext.Provider value={exportValue}>{children}</SettingContext.Provider>;
 };

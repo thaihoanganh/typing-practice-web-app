@@ -1,7 +1,20 @@
 export interface ISettingEntity {
-  _id: string;
-  userId: string;
-  themeMode: string;
-  lesson: string;
-  level: any;
+  theme: {
+    options: {
+      brand: string;
+    }[];
+    selected: number;
+  };
+  sound: {
+    options: string[];
+    selected: number;
+  };
+  lesson: {
+    options: ILessons[];
+    selected: number;
+  };
+  level: {
+    options: ILessonLevel[];
+    selected: number | ILessonLevel;
+  };
 }
