@@ -1,11 +1,12 @@
+import { useContext } from "react";
 import { SettingContext } from ".";
 
 export const useSetting = () => {
-  const { status: settingStatus, errorMessage: settingErrorMessage, entity: setting } = SettingContext.getState();
+  const { status, errorMessage, entity } = useContext(SettingContext.initial);
 
   return {
-    settingStatus,
-    settingErrorMessage,
-    setting,
+    settingStatus: status,
+    settingErrorMessage: errorMessage,
+    setting: entity,
   };
 };
