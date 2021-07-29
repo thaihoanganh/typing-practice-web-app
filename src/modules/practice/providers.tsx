@@ -24,7 +24,7 @@ export const PracticeProvider: React.FC = ({ children }) => {
       data: [],
       statistical: {
         accuracy: null,
-        wpm: null,
+        wordsPerMinute: null,
         totalCharacters: null,
         totalWords: null,
         totalWordsIncorrect: null,

@@ -13,7 +13,7 @@ export interface IPracticeEntity {
   }[][];
   statistical: {
     accuracy: null | number;
-    wpm: null | number;
+    wordsPerMinute: null | number;
     totalCharacters: null | number;
     totalWords: null | number;
     totalWordsIncorrect: null | number;
