@@ -23,16 +23,16 @@ export const actionSetPractice = (practiceData: IPracticeEntity["data"]) => {
     ...prevState,
     status: "READY",
     entity: {
+      ...prevState.entity,
       cursonCharacter: 0,
       cursonWord: 0,
       isCheckAfterWord: false,
       isCompleted: false,
-      isReady: false,
       isTyping: false,
       data: practiceData,
       statistical: {
         accuracy: null,
-        wpm: null,
+        wordsPerMinute: null,
         totalCharacters,
         totalWords,
         totalWordsIncorrect: null,
@@ -154,10 +154,10 @@ export const actionPracticeStatistics = () => {
     const timeEnd: any = practice.data[practice.cursonWord][practice.cursonCharacter].typedAt;
     const totalTime = (timeEnd - timeStart) / 1000;
     const accuracy = 1 - totalCharactersIncorrect / totalCharacters;
-    const wpm = totalWords / (totalTime / 60);
+    const wordsPerMinute = totalWords / (totalTime / 60);
 
     practice.statistical.accuracy = accuracy;
-    practice.statistical.wpm = wpm;
+    practice.statistical.wordsPerMinute = wordsPerMinute;
     practice.statistical.totalWordsIncorrect = totalWordsIncorrect;
     practice.statistical.totalTime = totalTime;
 

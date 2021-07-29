@@ -1,11 +1,12 @@
 import { useContext } from "react";
-
 import { LessonContext } from ".";
 
 export const useLesson = () => {
-  const { lessonState } = useContext(LessonContext);
+  const { status, errorMessage, entity } = useContext(LessonContext.initial);
 
   return {
-    lessonState,
+    lessonStatus: status,
+    lessonErrorMessage: errorMessage,
+    lesson: entity,
   };
 };

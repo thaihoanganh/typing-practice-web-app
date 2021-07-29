@@ -1,117 +1,84 @@
-import React, { createContext, useState, useEffect, useMemo } from "react";
-import { LESSON_CONFIG } from "@/constants/lessons";
-import { useUser } from "@/modules/user";
+import React, { useState, useEffect, useMemo } from "react";
+import { createAppContext } from "@/utils/context";
+import { useUser, actionUpdateUser } from "@/modules/user";
 import { useSetting } from "@/modules/setting";
-import { usePractice } from "@/modules/practice/hooks";
-import { createLesson } from ".";
+import { usePractice } from "@/modules/practice";
+import { ILessonEntity, actionSetLesson } from ".";
 
 export interface ILessonState {
-  passScoreAccuracy: number;
-  passScoreWpm: number;
-  results: {
-    accuracy: null | number;
-    wpm: null | number;
-    totalTime: null | number;
-  };
+  status: "READY" | "LOADING" | "ERROR";
+  errorMessage: null | string;
+  entity: ILessonEntity;
 }
 
-export interface ILessonContext {
-  lessonState: ILessonState;
-  setLessonState: React.Dispatch<React.SetStateAction<ILessonState>>;
-}
-
-export const LessonContext = createContext({} as ILessonContext);
+export const LessonContext = createAppContext<ILessonState>();
 
 export const LessonProvider: React.FC = ({ children }) => {
+  const { user, userStatus } = useUser();
+  const { setting } = useSetting();
+  const { practice } = usePractice();
+  const { accuracy, wordsPerMinute, totalTime } = practice.statistical;
+
   const [state, setState] = useState<ILessonState>({
-    passScoreAccuracy: 1,
-    passScoreWpm: 40,
-    results: {
-      accuracy: null,
-      wpm: null,
-      totalTime: null,
+    status: "LOADING",
+    errorMessage: null,
+    entity: {
+      isLessonGuide: false,
+      lessonGuideMessage: null,
+      minimumAccuracy: null,
+      minimumWordsPerMinute: null,
+      results: {
+        accuracy: null,
+        wordsPerMinute: null,
+        totalTime: null,
+      },
     },
   });
 
-  const { userState, onHandleUpdateUser } = useUser();
-  const { settingState } = useSetting();
-  const { practiceState, practiceSetState } = usePractice();
-  const { currentLesson } = userState;
-
   useEffect(() => {
-    if (settingState.lesson) {
-      setPracticeLesson();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settingState.lesson, userState.currentLesson]);
-
-  useEffect(() => {
-    const { accuracy, wpm, totalTime } = practiceState.statistical;
-    if (accuracy !== null && wpm !== null) {
-      setState((prevState) => ({
-        ...prevState,
-        results: {
-          accuracy,
-          wpm,
-          totalTime,
-        },
-      }));
-
-      if (settingState && state.passScoreAccuracy <= accuracy && state.passScoreWpm <= wpm) {
-        if (userState.currentLesson < settingState.lesson.options[settingState.lesson.selected].data.length - 2) {
-          onHandleUpdateUser({
-            ...userState,
-            currentLesson: userState.currentLesson + 1,
-          });
-        }
+    if (userStatus) {
+      if (state.entity.isLessonGuide) {
+        actionSetLesson({
+          isNextLesson: true,
+        });
       } else {
-        setPracticeLesson();
+        actionSetLesson({});
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [practiceState]);
+  }, [user.currentLesson]);
 
-  const setPracticeLesson = () => {
-    const totalCharacters = 100;
-    const newLesson = createLesson(
-      settingState.lesson.options,
-      settingState.lesson.selected,
-      LESSON_CONFIG,
-      currentLesson,
-      settingState.level.options,
-      settingState.level.selected,
-      totalCharacters
-    );
-    practiceSetState((prevState) => ({
-      ...prevState,
-      cursonCharacter: 0,
-      cursonWord: 0,
-      isCompleted: false,
-      practiceData: newLesson.lessonData,
-      isCheckAfterWord: false,
-      statistical: {
-        ...prevState.statistical,
-        accuracy: null,
-        wpm: null,
-        totalCharacters,
-        totalWords: newLesson.lessonData.length,
-        totalWordsIncorrect: null,
-        totalTime: null,
-      },
-    }));
-    setState((prevState) => ({
-      ...prevState,
-      passScoreAccuracy: newLesson.passScoreAccuracy,
-      passScoreWpm: newLesson.passScoreWpm,
-    }));
-  };
+  useEffect(() => {
+    const { isLessonGuide, minimumAccuracy, minimumWordsPerMinute } = state.entity;
+    if (accuracy !== null && wordsPerMinute !== null && minimumAccuracy !== null && minimumWordsPerMinute !== null) {
+      const cloneState = { ...state };
 
-  const exportValue = useMemo<ILessonContext>(() => {
-    return {
-      lessonState: state,
-      setLessonState: setState,
-    };
-  }, [state]);
+      if (!isLessonGuide && accuracy >= minimumAccuracy && wordsPerMinute >= minimumWordsPerMinute) {
+        if (user.currentLesson < setting.lesson.options[setting.lesson.selected].data.length - 1) {
+          cloneState.entity.isLessonGuide = true;
+          actionUpdateUser({
+            currentLesson: user.currentLesson + 1,
+          });
+        } else {
+          actionSetLesson({});
+        }
+      } else {
+        cloneState.entity.isLessonGuide = false;
+        actionSetLesson({});
+      }
+
+      cloneState.entity.results = {
+        ...cloneState.entity.results,
+        accuracy,
+        wordsPerMinute,
+        totalTime,
+      };
+      setState(cloneState);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accuracy, wordsPerMinute, totalTime]);
+
+  const exportValue = useMemo(() => ({ state, setState }), [state]);
 
   return <LessonContext.Provider value={exportValue}>{children}</LessonContext.Provider>;
 };
