@@ -1,8 +1,7 @@
 import React, { createElement } from "react";
 import classNames from "classnames";
 
-export interface TextProps
-  extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
+export interface TextProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
   as?: keyof JSX.IntrinsicElements;
   color?: keyof typeof COLORS;
   variant?: keyof typeof VARIANTS;

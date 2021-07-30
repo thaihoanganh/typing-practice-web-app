@@ -11,9 +11,9 @@ export const NavItem: React.FC<NavItemProps> = ({ className, children, ...otherP
   const { asPath } = useRouter();
 
   return (
-    <li className={classNames("p-sm", className)}>
+    <li className={classNames("flex items-center py-sm px-md last:pr-0", className)}>
       <Link {...otherProps}>
-        <a>
+        <a className="inline-flex items-center">
           {Children.map(children, (child) => {
             if (isValidElement(child)) {
               return cloneElement(child, {

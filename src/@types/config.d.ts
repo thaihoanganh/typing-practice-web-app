@@ -23,5 +23,4 @@ type ILessonConfig = {
   hightPracticeRate: number;
   normalPracticeRate: number;
   lowPracticeRate: number;
-  emergencyPracticeRate: number;
 };

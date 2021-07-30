@@ -34,25 +34,24 @@ export const LESSON_CONFIG: ILessonConfig = {
   hightPracticeRate: 0.15,
   normalPracticeRate: 0.1,
   lowPracticeRate: 0.05,
-  emergencyPracticeRate: 0.1,
 };
 
 export const LESSON_LEVEL: ILessonLevel[] = [
   {
     name: "Dễ",
     accuracy: {
-      min: 0.8,
+      min: 0.85,
       max: 1,
     },
     wpm: {
-      min: 20,
+      min: 25,
       max: 50,
     },
   },
   {
     name: "Trung bình",
     accuracy: {
-      min: 0.85,
+      min: 0.9,
       max: 1,
     },
     wpm: {
@@ -63,18 +62,18 @@ export const LESSON_LEVEL: ILessonLevel[] = [
   {
     name: "Khó",
     accuracy: {
-      min: 0.9,
+      min: 0.95,
       max: 1,
     },
     wpm: {
-      min: 40,
-      max: 100,
+      min: 35,
+      max: 105,
     },
   },
   {
     name: "Tuỳ Chỉnh",
     accuracy: {
-      min: 0.85,
+      min: 0.9,
       max: 1,
     },
     wpm: {

@@ -1,36 +1,63 @@
 import React from "react";
-import { usePractice } from "@/modules/practice";
+
+import { usePractice, actionToggleFocusTextData, actionPressKeyboard } from "@/modules/practice";
 import { useLesson } from "@/modules/lesson";
 import TextData, { TextDataWrapper, TextDataInput } from "@/components/organisms/TextData";
-import Result, { ResultList } from "@/components/organisms/Result";
+import Result from "@/components/organisms/Result";
+import Keyboard, { Keycap } from "@/components/organisms/Keyboard";
 
-const PracticeLesson: React.FC = () => {
-  const { practiceState, onHandleKeyPress, onToggleReady } = usePractice();
-  const { lessonState } = useLesson();
+const PracticeLesson = () => {
+  const { practice } = usePractice();
+  const { lesson } = useLesson();
 
-  const { cursonWord, isReady, isTyping, practiceData } = practiceState;
-  const { passScoreAccuracy, passScoreWpm } = lessonState;
-  const { accuracy, totalTime, wpm } = lessonState.results;
+  const { minimumAccuracy, minimumWordsPerMinute } = lesson;
+  const { totalTime, wordsPerMinute, accuracy } = lesson.results;
 
-  const wpmValue = wpm ? wpm.toFixed(2) + " wpm" : "0 wpm";
-  const accuracyvalue = accuracy ? (accuracy * 100).toFixed(2) + " %" : "0 %";
-  const totalTimeValue = totalTime ? totalTime.toFixed(2) + " s" : "";
+  let accuracyRatio = 0;
+  let wordsPerMinuteRatio = 0;
 
-  const wpmRatio = wpm ? (wpm < passScoreWpm ? wpm / passScoreWpm : 1) : 0;
-  const accuracyRatio = accuracy ? (accuracy < passScoreAccuracy ? accuracy / passScoreAccuracy : 1) : 0;
-  const totalTimeRatio = totalTime ? 1 : 0;
+  if (minimumAccuracy && accuracy && minimumWordsPerMinute && wordsPerMinute) {
+    accuracyRatio = accuracy / minimumAccuracy;
+    wordsPerMinuteRatio = wordsPerMinute / minimumWordsPerMinute;
+  }
 
   return (
     <React.Fragment>
-      <TextDataWrapper>
-        <TextData cursonWord={cursonWord} isReady={isReady} data={practiceData} />
-        <TextDataInput onHandleKeyPress={onHandleKeyPress} onToggleFocus={onToggleReady} />
-      </TextDataWrapper>
-      <ResultList isLoading={isTyping}>
-        <Result value={wpmValue} ratio={wpmRatio} title="Tốc độ gõ" />
-        <Result value={accuracyvalue} ratio={accuracyRatio} title="Độ chính xác" />
-        <Result value={totalTimeValue} ratio={totalTimeRatio} title="Thời gian" />
-      </ResultList>
+      <div className="m-lg">
+        <TextDataWrapper>
+          <TextData data={practice.data} isReady={practice.isReady} cursonWord={practice.cursonWord} />
+          <TextDataInput
+            cursonWord={practice.cursonWord}
+            onToggleFocus={actionToggleFocusTextData}
+            onHandleKeyPress={actionPressKeyboard}
+          />
+        </TextDataWrapper>
+      </div>
+
+      <div className="desktop:flex m-lg">
+        <Result
+          title="Thời gian"
+          isLoading={practice.isTyping}
+          value={totalTime ? totalTime.toFixed(2) + " s" : ""}
+          ratio={Number(totalTime && !practice.isTyping)}
+        />
+        <Result
+          title="Tốc độ gõ"
+          isLoading={practice.isTyping}
+          value={wordsPerMinute ? wordsPerMinute.toFixed(2) + " wpw" : ""}
+          ratio={wordsPerMinuteRatio < 1 ? wordsPerMinuteRatio : 1}
+        />
+        <Result
+          title="Độ chính xác"
+          isLoading={practice.isTyping}
+          value={accuracy ? (accuracy * 100).toFixed(2) + " %" : ""}
+          ratio={accuracyRatio < 1 ? accuracyRatio : 1}
+        />
+      </div>
+
+      <div className="m-lg">
+        <Keyboard />
+      </div>
     </React.Fragment>
   );
 };
