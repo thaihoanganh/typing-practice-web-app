@@ -1,0 +1,53 @@
+.keyboard {
+  display: grid;
+  grid-template-columns: repeat(60, 1fr);
+  grid-gap: 8px;
+}
+
+.keycap {
+  grid-column: span 4;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+}
+
+.keycap[data-keycap="8-0"] {
+  grid-column: span 8;
+}
+
+.keycap[data-keycap="9-0"] {
+  grid-column: span 6;
+}
+
+.keycap[data-keycap="220-0"] {
+  grid-column: span 6;
+}
+
+.keycap[data-keycap="20-0"] {
+  grid-column: span 7;
+}
+
+.keycap[data-keycap="13-0"] {
+  grid-column: span 9;
+}
+
+.keycap[data-keycap="16-0"] {
+  grid-column: span 9;
+}
+
+.keycap[data-keycap="16-1"] {
+  grid-column: span 11;
+}
+
+.keycap[data-keycap="17-1"] {
+  grid-column: span 6;
+}
+
+.keycap[data-keycap="32-0"] {
+  grid-column: span 40;
+}
+
+.keycap[data-keycap="17-2"] {
+  grid-column: span 6;
+}
