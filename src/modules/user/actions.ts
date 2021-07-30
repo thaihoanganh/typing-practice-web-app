@@ -16,7 +16,7 @@ export const actionGetUser = () => {
     status: "READY",
     entity: {
       ...prevState.entity,
-      currentLesson: userValidate.value.currentLesson,
+      currentLesson: userValidate.error ? 1 : userValidate.value.currentLesson,
     },
   }));
 };
