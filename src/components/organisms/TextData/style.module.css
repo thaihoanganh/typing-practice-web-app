@@ -1,0 +1,13 @@
+.character {
+  border-left: 1px solid transparent;
+}
+
+.character-curson {
+  animation: blink-animation 1000ms step-start 0s infinite;
+}
+
+@keyframes blink-animation {
+  50% {
+    border-left-color: inherit;
+  }
+}
