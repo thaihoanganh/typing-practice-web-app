@@ -5,13 +5,15 @@ import Grid from "@/components/atoms/Grid";
 import Text from "@/components/atoms/Text";
 
 export interface ResultProps {
-  isLoading?: boolean;
+  isLoading: boolean;
   value: string;
   ratio: number;
   title: string;
 }
 
 export const Result: React.FC<ResultProps> = ({ isLoading, value, ratio, title }) => {
+  const widthRatio = isLoading ? 0 : ratio * 100;
+
   return (
     <Grid
       className="desktop:flex-grow my-sm desktop:my-0 desktop:mx-md first:ml-0 last:mr-0 p-sm border rounded"
@@ -30,9 +32,9 @@ export const Result: React.FC<ResultProps> = ({ isLoading, value, ratio, title }
         color="contrast"
       >
         <Grid
-          style={{ width: `${isLoading ? 0 : ratio * 100}%` }}
+          style={{ width: widthRatio + "%" }}
           className={classNames("h-1 rounded duration-500")}
-          color="contrast"
+          color={widthRatio < 100 ? "danger" : "contrast"}
         />
       </Grid>
     </Grid>
