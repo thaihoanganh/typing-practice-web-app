@@ -15,6 +15,6 @@ export interface ISettingEntity {
   };
   level: {
     options: ILessonLevel[];
-    selected: number | ILessonLevel;
+    selected: number;
   };
 }
