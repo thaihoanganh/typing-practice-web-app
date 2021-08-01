@@ -59,7 +59,7 @@ export const actionGetSetting = () => {
   }
 };
 
-export const actionUpdateTheme = (setting: ISettingEntity) => {
+export const actionUpdateSetting = (setting: ISettingEntity) => {
   const theme = setting.theme.selected;
   const sound = setting.sound.selected;
   const lesson = setting.lesson.selected;
@@ -85,6 +85,7 @@ export const actionChangeTheme = (selectdValue: number) => {
   SettingContext.setState((prevState) => {
     const cloneState = { ...prevState };
     cloneState.entity.theme.selected = selectdValue;
+    actionUpdateSetting(cloneState.entity);
     return cloneState;
   });
 };
@@ -93,6 +94,7 @@ export const actionChangeSound = (selectdValue: number) => {
   SettingContext.setState((prevState) => {
     const cloneState = { ...prevState };
     cloneState.entity.sound.selected = selectdValue;
+    actionUpdateSetting(cloneState.entity);
     return cloneState;
   });
 };
@@ -101,6 +103,7 @@ export const actionChangeLesson = (selectdValue: number) => {
   SettingContext.setState((prevState) => {
     const cloneState = { ...prevState };
     cloneState.entity.lesson.selected = selectdValue;
+    actionUpdateSetting(cloneState.entity);
     return cloneState;
   });
 };
@@ -114,6 +117,7 @@ export const actionChangeLevel = (selectdValue: number | ILessonLevel) => {
       cloneState.entity.level.options[LESSON_LEVEL.length - 1] = selectdValue;
       cloneState.entity.level.selected = LESSON_LEVEL.length - 1;
     }
+    actionUpdateSetting(cloneState.entity);
     return cloneState;
   });
 };
