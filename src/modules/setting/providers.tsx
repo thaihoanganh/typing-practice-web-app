@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { LESSONS, LESSON_LEVEL } from "@/constants/lessons";
 import { createAppContext } from "@/utils/context";
-import { ISettingEntity, actionGetSetting, actionUpdateTheme } from ".";
+import { ISettingEntity, actionGetSetting } from ".";
 
 export interface ISettingState {
   status: "READY" | "LOADING" | "ERROR";
@@ -25,7 +25,7 @@ export const SettingProvider: React.FC = ({ children }) => {
         selected: 0,
       },
       sound: {
-        options: ["on", "off"],
+        options: ["Bật", "Tắt"],
         selected: 0,
       },
       lesson: {
@@ -42,13 +42,6 @@ export const SettingProvider: React.FC = ({ children }) => {
   useEffect(() => {
     actionGetSetting();
   }, []);
-
-  useEffect(() => {
-    if (state.status === "READY") {
-      actionUpdateTheme(state.entity);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.entity]);
 
   const exportValue = useMemo(() => ({ state, setState }), [state]);
 
