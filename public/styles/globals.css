@@ -1,3 +1,12 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+
+:root {
+  --primary: 22, 22, 22;
+  --contrast-primary: 255, 255, 255;
+  --secondary: 251, 251, 251;
+  --contrast-secondary: 0, 0, 0;
+  --danger: 184, 42, 42;
+  --contrast-danger: 255, 255, 255;
+}

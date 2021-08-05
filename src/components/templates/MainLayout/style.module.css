@@ -1,0 +1,7 @@
+.header {
+  height: 56px;
+}
+
+.content {
+  min-height: calc(100vh - 56px);
+}
