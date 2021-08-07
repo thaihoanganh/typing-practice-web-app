@@ -13,7 +13,6 @@ export const actionGetSetting = () => {
         throw new Error("Something wrong");
       }
     });
-    console.log(123);
     SettingContext.setState((prevState) => ({ ...prevState, status: "READY", entity: setting }));
   } catch (error) {
     SettingContext.setState((prevState) => ({ ...prevState, status: "READY" }));
