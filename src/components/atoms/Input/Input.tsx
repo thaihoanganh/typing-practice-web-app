@@ -4,12 +4,15 @@ import classNames from "classnames";
 export interface InputProps
   extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
   fullWidth?: boolean;
-  prefix?: string;
-  suffix?: string;
+  prefix?: any;
+  suffix?: any;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, disabled, fullWidth, onBlur, onFocus, prefix, suffix, ...otherProps }, refInput) => {
+  (
+    { className, disabled, fullWidth, onBlur, onFocus, prefix, style, suffix, ...otherProps },
+    refInput
+  ) => {
     const refWrapper: React.LegacyRef<HTMLDivElement> = useRef(null);
 
     const onToggleFocus = () => {
@@ -22,6 +25,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <div
+        style={style}
         className={classNames(
           "inline-flex py-sm px-md border-2 border-contrast-secondary border-opacity-12 rounded",
           !disabled && "hover:border-opacity-24",
@@ -31,14 +35,19 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         ref={refWrapper}
       >
         {prefix && (
-          <span className={classNames("mr-sm text-body-1 text-contrast-secondary", disabled && "text-opacity-32")}>
+          <span
+            className={classNames(
+              "mr-sm text-body-1 text-contrast-secondary",
+              disabled && "text-opacity-32"
+            )}
+          >
             {prefix}
           </span>
         )}
         <input
           type="text"
           className={classNames(
-            "flex-grow outline-none text-body-1 text-contrast-secondary",
+            "flex-grow outline-none bg-transparent text-body-1 text-contrast-secondary",
             disabled && "text-opacity-32 pointer-events-none"
           )}
           onFocus={(e) => {
@@ -54,7 +63,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           {...otherProps}
         />
         {suffix && (
-          <span className={classNames("ml-sm text-body-1 text-contrast-secondary", disabled && "text-opacity-32")}>
+          <span
+            className={classNames(
+              "ml-sm text-body-1 text-contrast-secondary",
+              disabled && "text-opacity-32"
+            )}
+          >
             {suffix}
           </span>
         )}
