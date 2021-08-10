@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { createAppContext } from "@/helpers/context";
+import { setVariableColor, getContrastColor } from "@/helpers/color";
 
 import { ISettingEntity, initialSettingEntity, actionGetSetting } from ".";
 
@@ -21,6 +22,17 @@ export const SettingProvider: React.FC = ({ children }) => {
   useEffect(() => {
     actionGetSetting();
   }, []);
+
+  useEffect(() => {
+    const { primary, secondary, danger } = state.entity.theme.options[state.entity.theme.selected];
+    setVariableColor("--primary", primary);
+    setVariableColor("--contrast-primary", getContrastColor(primary));
+    setVariableColor("--secondary", secondary);
+    setVariableColor("--contrast-secondary", getContrastColor(secondary));
+    setVariableColor("--danger", danger);
+    setVariableColor("--contrast-danger", getContrastColor(danger));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.entity.theme.selected]);
 
   const exportValue = useMemo(() => ({ state, setState }), [state]);
 
