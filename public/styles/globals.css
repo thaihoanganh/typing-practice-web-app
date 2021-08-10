@@ -10,3 +10,7 @@
   --danger: 184, 42, 42;
   --contrast-danger: 255, 255, 255;
 }
+
+.bg-transparent {
+  background-color: transparent;
+}
