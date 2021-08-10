@@ -12,9 +12,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ header, content }) => {
       <div className={classes.header}>
         <div className="desktop:w-960 h-full mx-auto">{header}</div>
       </div>
-      <div className={classes.content}>
-        <div className="desktop:w-960 mx-auto">{content}</div>
-      </div>
+      <div className="desktop:w-960 mx-auto">{content}</div>
     </div>
   );
 };
