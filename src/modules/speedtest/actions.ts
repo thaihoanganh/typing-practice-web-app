@@ -6,30 +6,23 @@ import { SpeedTestContext } from ".";
 export const actionCreateTestDataFromString = (value = "", isShuffle = true) => {
   const words = isShuffle ? shuffle(value.split(" ")) : value.split(" ");
   const totalWords = words.length;
-  let totalCharacters = 0;
 
   const testData = words.map((word, wordIndex) => {
     if (wordIndex === words.length - 1) {
-      return word.split("").map((characters: any) => {
-        totalCharacters += 1;
-        return {
-          characters,
-          isIncorrect: false,
-          typedAt: null,
-        };
-      });
+      return word.split("").map((character: any) => ({
+        character,
+        isIncorrect: false,
+        typedAt: null,
+      }));
     } else {
       return [
-        ...word.split("").map((characters: any) => {
-          totalCharacters += 1;
-          return {
-            characters,
-            isIncorrect: false,
-            typedAt: null,
-          };
-        }),
+        ...word.split("").map((character: any) => ({
+          character,
+          isIncorrect: false,
+          typedAt: null,
+        })),
         {
-          characters: " ",
+          character: " ",
           isIncorrect: false,
           typedAt: null,
         },
@@ -42,14 +35,13 @@ export const actionCreateTestDataFromString = (value = "", isShuffle = true) => 
     status: "READY",
     entity: {
       ...prevState.entity,
-      charactersCursor: 0,
+      characterCursor: 0,
       wordCursor: 0,
       isCheckAfterWord: true,
       isCompleted: false,
       data: testData,
       statistical: {
         ...prevState.entity.statistical,
-        totalCharacters: totalCharacters + totalWords - 1,
         totalWords,
       },
     },
@@ -80,13 +72,13 @@ export const actionHandleTypingWord = (word: string, isNextWord: boolean, typing
   if (isNextWord) {
     if (data[wordCursor].length >= word.length) {
       data[wordCursor].map((chractersObj, index) => {
-        data[wordCursor][index].isIncorrect = word[index] !== chractersObj.characters;
+        data[wordCursor][index].isIncorrect = word[index] !== chractersObj.character;
         data[wordCursor][index].typedAt = typingTime[index] || typedAt;
       });
     } else {
-      data[wordCursor] = word.split("").map<any>((characters, index) => ({
-        characters: characters,
-        isIncorrect: word[index] !== data[wordCursor][index]?.characters,
+      data[wordCursor] = word.split("").map<any>((character, index) => ({
+        character: character,
+        isIncorrect: word[index] !== data[wordCursor][index]?.character,
         typedAt: typingTime[index],
       }));
     }

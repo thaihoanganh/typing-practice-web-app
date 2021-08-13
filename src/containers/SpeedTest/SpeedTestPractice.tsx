@@ -15,7 +15,7 @@ export const SpeedTestPractice: React.FC = () => {
             isCompleted={speedTest.isCompleted}
             isReady={speedTest.isReady}
             wordCursor={speedTest.wordCursor}
-            charactersCursor={speedTest.charactersCursor}
+            characterCursor={speedTest.characterCursor}
           />
         )}
         {!speedTest.isCompleted && (

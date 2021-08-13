@@ -1,12 +1,12 @@
 export type ISpeedTestEntity = {
-  charactersCursor: number;
+  characterCursor: number;
   wordCursor: number;
   isCheckAfterWord: boolean;
   isCompleted: boolean;
   isReady: boolean;
   isTyping: boolean;
   data: {
-    characters: string;
+    character: string;
     isIncorrect: boolean;
     typedAt: null | number;
   }[][];

@@ -15,7 +15,7 @@ export const SpeedTestProvider: React.FC = ({ children }) => {
     status: "LOADING",
     errorMessage: null,
     entity: {
-      charactersCursor: 0,
+      characterCursor: 0,
       wordCursor: 0,
       isCheckAfterWord: false,
       isReady: false,
