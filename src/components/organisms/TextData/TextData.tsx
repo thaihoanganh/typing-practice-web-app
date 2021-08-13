@@ -5,7 +5,7 @@ import classes from "./style.module.css";
 
 export interface TextDataProps {
   data: {
-    characters: string;
+    character: string;
     isIncorrect: boolean;
     typedAt: null | number;
   }[][];
@@ -13,7 +13,7 @@ export interface TextDataProps {
   isCompleted: boolean;
   isReady: boolean;
   wordCursor: number;
-  charactersCursor: number;
+  characterCursor: number;
 }
 
 export const TextData: React.FC<TextDataProps> = ({
@@ -26,14 +26,14 @@ export const TextData: React.FC<TextDataProps> = ({
   const cursorElement: any = useRef(null);
 
   const [state, setState] = useState({
-    charactersHeight: 32,
+    characterHeight: 32,
   });
 
   useLayoutEffect(() => {
     if (textDataElement.current && textDataElement.current.firstChild) {
       setState((prevState) => ({
         ...prevState,
-        charactersHeight: textDataElement.current.firstChild.scrollHeight,
+        characterHeight: textDataElement.current.firstChild.scrollHeight,
       }));
     }
   }, []);
@@ -41,8 +41,8 @@ export const TextData: React.FC<TextDataProps> = ({
   useEffect(() => {
     if (textDataElement.current && textDataElement.current.childNodes[wordCursor]) {
       const { offsetTop } = textDataElement.current.childNodes[wordCursor];
-      if (offsetTop > state.charactersHeight) {
-        textDataElement.current.style.top = -offsetTop + state.charactersHeight + "px";
+      if (offsetTop > state.characterHeight) {
+        textDataElement.current.style.top = -offsetTop + state.characterHeight + "px";
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -64,7 +64,7 @@ export const TextData: React.FC<TextDataProps> = ({
     >
       {!isCheckAfterWord && (
         <div
-          style={{ width: 2, height: state.charactersHeight }}
+          style={{ width: 2, height: state.characterHeight }}
           className="fixed rounded-sm bg-contrast-secondary duration-150"
           ref={cursorElement}
         />
@@ -82,16 +82,16 @@ export const TextData: React.FC<TextDataProps> = ({
                 "bg-contrast-secondary bg-opacity-12"
             )}
           >
-            {word.map((characters, charactersIndex) => (
+            {word.map((character, characterIndex) => (
               <div
-                key={charactersIndex}
+                key={characterIndex}
                 className={classNames(
                   "text-contrast-secondary text-opacity-48",
-                  characters.typedAt &&
-                    (characters.isIncorrect ? "text-danger text-opacity-100" : "text-opacity-100")
+                  character.typedAt &&
+                    (character.isIncorrect ? "text-danger text-opacity-100" : "text-opacity-100")
                 )}
               >
-                {String(characters.characters)}
+                {String(character.character)}
               </div>
             ))}
           </div>
