@@ -19,9 +19,10 @@
       "@/constants/*": ["src/constants/*"],
       "@/containers/*": ["src/containers/*"],
       "@/helpers/*": ["src/helpers/*"],
-      "@/modules/*": ["src/modules/*"]
+      "@/modules/*": ["src/modules/*"],
+      "@/utils/*": ["src/utils/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/containers/SpeedTestControl"],
   "exclude": ["node_modules"]
 }

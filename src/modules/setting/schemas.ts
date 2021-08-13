@@ -24,6 +24,12 @@ export const lessonLevelSchema = z.object({
   wordsPerMinuteMax: z.number().min(0),
 });
 
+export const topTrendingWords = z.object({
+  name: z.string(),
+  isShuffle: z.boolean(),
+  words: z.string(),
+});
+
 export const settingSchema = z.object({
   theme: z.object({
     options: z.array(themeSchema),
@@ -39,6 +45,10 @@ export const settingSchema = z.object({
   }),
   lessonLevel: z.object({
     options: z.array(lessonLevelSchema),
+    selected: z.number(),
+  }),
+  topTrendingWords: z.object({
+    options: z.array(topTrendingWords),
     selected: z.number(),
   }),
 });
