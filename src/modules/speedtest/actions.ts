@@ -77,7 +77,10 @@ export const actionHandleTypingWord = (word: string, isNextWord: boolean, typing
       });
     } else {
       data[wordCursor] = word.split("").map<any>((character, index) => ({
-        character: character,
+        character:
+          index < data[wordCursor].length && data[wordCursor][index].character !== " "
+            ? data[wordCursor][index].character
+            : character,
         isIncorrect: word[index] !== data[wordCursor][index]?.character,
         typedAt: typingTime[index],
       }));
