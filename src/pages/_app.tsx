@@ -1,14 +1,14 @@
 import "../../public/styles/globals.css";
 import type { AppProps } from "next/app";
-import { SettingProvider } from "@/modules/setting";
+import { SettingsProvider } from "@/modules/settings";
 import MainLayout from "@/components/templates/MainLayout";
 import Header from "@/containers/Header";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <SettingProvider>
+    <SettingsProvider>
       <MainLayout header={<Header />} content={<Component {...pageProps} />} />
-    </SettingProvider>
+    </SettingsProvider>
   );
 }
 export default MyApp;
