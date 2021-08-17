@@ -53,7 +53,14 @@ export const ThemeSetting = () => {
 
   const onToggleTheme = (themeId: string) => {
     if (themeId === "custom") {
-      setState((prevState) => ({ ...prevState, selected: "custom" }));
+      setState((prevState) => ({
+        ...prevState,
+        option: {
+          ...prevState.option,
+          isDefault: false,
+        },
+        selected: "custom",
+      }));
     } else if (themeId === option._id) {
       setState((prevState) => ({ ...prevState, selected: option._id }));
     } else {
@@ -62,31 +69,39 @@ export const ThemeSetting = () => {
   };
 
   const onHandleChangeTheme = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setState(
-      produce((draft: any) => {
-        draft.isEdited = true;
-        if (name === "name") {
-          draft.option.name = value;
-        } else {
-          draft.option.value[name] = value;
-          setVariableColor("--" + name, value);
-          setVariableColor("--contrast-" + name, getContrastColor(value));
-        }
-      })
-    );
+    if (!state.option.isDefault) {
+      const { name, value } = e.target;
+      setState(
+        produce((draft: any) => {
+          draft.isEdited = true;
+          if (name === "name") {
+            draft.option.name = value;
+          } else {
+            draft.option.value[name] = value;
+            setVariableColor("--" + name, value);
+            setVariableColor("--contrast-" + name, getContrastColor(value));
+          }
+        })
+      );
+    }
   };
 
   const onHandleCreateTheme = () => {
-    actionCreateThemeSetting({ name: state.option.name, value: state.option.value });
+    if (state.selected === "custom") {
+      actionCreateThemeSetting({ name: state.option.name, value: state.option.value });
+    }
   };
 
   const onHandleUpdateTheme = () => {
-    actionUpdateTheme(state.option._id, { name: state.option.name, value: state.option.value });
+    if (state.isEdited && !state.option.isDefault) {
+      actionUpdateTheme(state.option._id, { name: state.option.name, value: state.option.value });
+    }
   };
 
   const onHandleDeleteTheme = () => {
-    actionDeleteThemeSetting(state.option._id);
+    if (!state.option.isDefault && state.selected !== "custom") {
+      actionDeleteThemeSetting(state.option._id);
+    }
   };
 
   return (
