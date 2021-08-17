@@ -54,7 +54,7 @@ module.exports = {
     fontSize: {
       "headline-1": "2.125rem",
       "headline-2": "1.5rem",
-      "headline-3": "1.25",
+      "headline-3": "1.25rem",
       "body-1": "1rem",
       "body-2": "0.875rem",
       button: "0.875rem",
