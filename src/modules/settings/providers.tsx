@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { IDBPDatabase, openDB } from "idb";
 import { createAppContext } from "@/helpers/context";
+import { getContrastColor, setVariableColor } from "@/helpers/color";
+import Toast from "@/components/molecules/Toast";
 
 import { ISettingsEntity, actionGetSettings } from ".";
 
@@ -31,9 +33,9 @@ export const initialSettings: ISettingsEntity = {
         name: "Dark",
         isDefault: true,
         value: {
-          primary: "#000",
-          secondary: "#000",
-          danger: "#000",
+          primary: "#121212",
+          secondary: "#fafafa",
+          danger: "#de4242",
         },
       },
     ],
@@ -97,7 +99,7 @@ export const initialSettings: ISettingsEntity = {
 
 export interface ISettingsState {
   status: "READY" | "LOADING" | "ERROR";
-  errorMessage: null | string;
+  message: null | string;
   entity: ISettingsEntity;
   storage: null | IDBPDatabase;
 }
@@ -107,7 +109,7 @@ export const SettingContext = createAppContext<ISettingsState>();
 export const SettingsProvider: React.FC = ({ children }) => {
   const [state, setState] = useState<ISettingsState>({
     status: "LOADING",
-    errorMessage: null,
+    message: null,
     entity: initialSettings,
     storage: null,
   });
@@ -130,10 +132,31 @@ export const SettingsProvider: React.FC = ({ children }) => {
   }, [state.storage]);
 
   useEffect(() => {
-    if (state.status === "ERROR") {
-      setState((prevState) => ({ ...prevState, status: "READY", errorMessage: null }));
+    if (state.message) {
+      setState((prevState) => ({ ...prevState, status: "READY", message: null }));
+      Toast({
+        message: state.message,
+        isError: state.status === "ERROR",
+      });
     }
-  }, [state.status]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.message]);
+
+  useEffect(() => {
+    const themeSetting: any = state.entity.theme.options.find(
+      (option) => option._id === state.entity.theme.selected
+    );
+
+    const { primary, secondary, danger } = themeSetting?.value || state.entity.theme.options[0];
+
+    setVariableColor("--primary", primary);
+    setVariableColor("--contrast-primary", getContrastColor(primary));
+    setVariableColor("--secondary", secondary);
+    setVariableColor("--contrast-secondary", getContrastColor(secondary));
+    setVariableColor("--danger", danger);
+    setVariableColor("--contrast-danger", getContrastColor(danger));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.entity.theme.selected]);
 
   const exportValue = useMemo(() => ({ state, setState }), [state]);
 
