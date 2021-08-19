@@ -85,7 +85,7 @@ export const DEFAULT_SETTINGS: ISettingsEntity = {
     primaryDefault: "HAT003001",
     selected: "HAT003001",
   },
-  topTrendingWords: {
+  speedTestData: {
     options: [
       {
         _id: "HAT004001",
