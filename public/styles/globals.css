@@ -11,6 +11,26 @@
   --contrast-danger: 255, 255, 255;
 }
 
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(var(--secondary), 1);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(var(--primary), 0.6);
+  border-radius: 2px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--primary), 0.87);
+}
+
 .bg-transparent {
   background-color: transparent;
 }
