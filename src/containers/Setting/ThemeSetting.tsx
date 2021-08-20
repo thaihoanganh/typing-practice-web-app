@@ -106,7 +106,7 @@ export const ThemeSetting = () => {
 
   return (
     <React.Fragment>
-      <div>
+      <div className="my-md">
         <h3 className="text-headline-3 text-contrast-secondary text-opacity-87 font-semibold">
           Chủ đề
         </h3>
@@ -132,17 +132,18 @@ export const ThemeSetting = () => {
         </div>
       </div>
 
-      <div className="flex items-center my-md">
-        <div className="mr-md">
+      <div className="flex flex-wrap items-center my-md mt-lg">
+        <div className="w-full desktop:w-auto mr-md my-sm">
           <Input
             name="name"
-            placeholder="Tên chủ đề"
+            placeholder="Tên tuỳ chọn"
             autoComplete="off"
             value={state.option.name}
             onChange={onHandleChangeTheme}
+            fullWidth
           />
         </div>
-        <div style={{ width: 75, height: 52 }} className="mr-md">
+        <div style={{ width: 75, height: 52 }} className="mr-md my-sm">
           <input
             type="color"
             className="w-full h-full bg-transparent"
@@ -151,7 +152,7 @@ export const ThemeSetting = () => {
             onChange={onHandleChangeTheme}
           />
         </div>
-        <div style={{ width: 75, height: 52 }} className="mr-md">
+        <div style={{ width: 75, height: 52 }} className="mr-md my-sm">
           <input
             type="color"
             className="w-full h-full bg-transparent"
@@ -160,7 +161,7 @@ export const ThemeSetting = () => {
             onChange={onHandleChangeTheme}
           />
         </div>
-        <div style={{ width: 75, height: 52 }} className="mr-md">
+        <div style={{ width: 75, height: 52 }} className="mr-md my-sm">
           <input
             type="color"
             className="w-full h-full bg-transparent"
@@ -172,26 +173,31 @@ export const ThemeSetting = () => {
       </div>
 
       <div className="flex my-md">
-        <div className="mr-md">
-          <Button disabled={state.selected !== "custom"} onClick={onHandleCreateTheme}>
-            Thêm chủ đề mới
+        <div className="mr-sm">
+          <Button
+            color="secondary"
+            disabled={state.selected !== "custom"}
+            onClick={onHandleCreateTheme}
+          >
+            Thêm tuỳ chọn
           </Button>
         </div>
-        <div className="mr-md">
+        <div className="mr-sm">
           <Button
-            disabled={state.selected === "custom" || !state.isEdited}
+            color="secondary"
+            disabled={option.isDefault || state.selected === "custom"}
             onClick={onHandleUpdateTheme}
           >
-            Cập nhật chủ đề
+            Cập nhật tuỳ chọn
           </Button>
         </div>
-        <div className="mr-md">
+        <div>
           <Button
-            disabled={option.isDefault || state.selected === "custom"}
-            color="secondary"
+            color="danger"
+            disabled={state.option.isDefault || state.selected === "custom"}
             onClick={onHandleDeleteTheme}
           >
-            Xoá chủ đề
+            Xoá tuỳ chọn
           </Button>
         </div>
       </div>
