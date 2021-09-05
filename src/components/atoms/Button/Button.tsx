@@ -50,7 +50,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 					className
 				)}
 				type={type}
-				disabled={false}
+				disabled={disabled}
 				ref={buttonRef}
 				{...otherProps}
 			>
@@ -60,9 +60,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 				/>
 				<span
 					className={classNames(
-						'text-button font-medium',
+						'text-button font-semibold',
 						COLORS[color][2],
-						disabled && color !== 'primary' && 'text-opacity-32'
+						disabled && (color !== 'primary' ? 'text-opacity-60' : 'text-opacity-32')
 					)}
 				>
 					{children}
