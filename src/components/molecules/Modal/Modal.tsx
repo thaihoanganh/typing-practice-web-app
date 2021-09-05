@@ -5,14 +5,14 @@ import classNames from 'classnames';
 export interface ModalProps
 	extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
 	isOpen?: boolean;
-	onClickOutside?: () => void;
+	onClose?: () => void;
 }
 
 export const Modal: React.FC<ModalProps> = ({
 	className,
 	children,
 	isOpen = false,
-	onClickOutside,
+	onClose,
 	...otherProps
 }) => {
 	const ref: any = useRef();
@@ -47,12 +47,12 @@ export const Modal: React.FC<ModalProps> = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const listener = (event: any) => {
+	function listener(event: any) {
 		if (!refModal.current || refModal.current.contains(event.target)) {
 			return;
 		}
-		onClickOutside && onClickOutside();
-	};
+		onClose && onClose();
+	}
 
 	const OverLay = (
 		<div className="fixed inset-0 bg-contrast-secondary bg-opacity-12">

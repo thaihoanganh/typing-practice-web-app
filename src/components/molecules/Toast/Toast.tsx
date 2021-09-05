@@ -68,7 +68,7 @@ export const Toast = (props: ToastProps) => {
 	if (!rootToast) {
 		rootToast = document.createElement('div');
 		rootToast.setAttribute('id', 'root-toast');
-		rootToast.className = 'fixed top-0 top-0 right-0 flex flex-col-reverse';
+		rootToast.className = 'fixed z-50 top-0 top-0 right-0 flex flex-col-reverse';
 		document.getElementsByTagName('body')[0].append(rootToast);
 	}
 

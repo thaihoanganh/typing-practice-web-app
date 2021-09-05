@@ -11,11 +11,11 @@ export const NavItem: React.FC<NavItemProps> = ({ className, children, ...otherP
 	const asPath = useRouter()?.asPath;
 
 	return (
-		<div className="mr-md last:mr-0">
+		<div className="inline-flex items-center mr-md last:mr-0">
 			<Link {...otherProps}>
 				<a
 					className={classNames(
-						'inline-flex items-center',
+						'inline-flex items-center mx-sm',
 						asPath && asPath === otherProps.href
 							? 'text-primary'
 							: 'text-contrast-secondary text-opacity-60'
