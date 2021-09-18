@@ -1,16 +1,21 @@
 import React, { useMemo, useState } from 'react';
+
+import { APP_STATUS } from '@/constants/app';
+
 import { createAppContext } from '@/helpers/context';
 
-import { APP_STATUS, IAppProviderWrapper } from '@/modules/config';
 import { IPracticeEntity } from '.';
 
-export type IPracticeContextState = IAppProviderWrapper<IPracticeEntity>;
-export const PracticeContext = createAppContext<IPracticeContextState>();
+export interface IPracticeState {
+	status: string;
+	entity: IPracticeEntity;
+}
 
-export const INITIAL_PRACTICE_DATA: IPracticeEntity = {
-	chracterCursor: 0,
+export const PracticeContext = createAppContext<IPracticeState>();
+
+export const INITAL_PRACTICE_STATE = {
+	characterCursor: 0,
 	wordCursor: 0,
-	isCheckAfterWord: false,
 	isCompleted: false,
 	isReady: false,
 	isTyping: false,
@@ -30,15 +35,12 @@ export const INITIAL_PRACTICE_DATA: IPracticeEntity = {
 };
 
 export const PracticeProvider: React.FC = ({ children }) => {
-	const [state, setState] = useState<IPracticeContextState>({
+	const [state, setState] = useState<IPracticeState>({
 		status: APP_STATUS.loading,
-		entity: INITIAL_PRACTICE_DATA,
-		storage: null,
+		entity: INITAL_PRACTICE_STATE,
 	});
 
 	const exportValue = useMemo(() => ({ state, setState }), [state]);
 
 	return <PracticeContext.Provider value={exportValue}>{children}</PracticeContext.Provider>;
 };
-
-export default PracticeProvider;
