@@ -1,7 +1,7 @@
 import React from 'react';
 import type { AppProps } from 'next/app';
 
-import { APP_STATUS } from '@/modules/config';
+import { APP_STATUS } from '@/constants/app';
 import { SettingsProvider, SettingsContext } from '@/modules/settings';
 
 import Nav, { NavItem } from '@/components/molecules/Nav';
