@@ -1,4 +1,4 @@
-type ISettingEntityWrapper<T> = {
+type ISettingWrapper<T> = {
 	primaryDefault: string;
 	selected: string;
 	options: {
@@ -10,36 +10,38 @@ type ISettingEntityWrapper<T> = {
 	};
 };
 
-export type ISoundEntity = ISettingEntityWrapper<boolean>;
+export type ISound = ISettingWrapper<boolean>;
 
-export type IThemeEntity = ISettingEntityWrapper<{
+export type ITheme = ISettingWrapper<{
 	primary: string;
 	secondary: string;
 }>;
 
-export type ILessonLevelEntity = ISettingEntityWrapper<{
+export type ILessonLevel = ISettingWrapper<{
 	wordsPerMinuteMin: number;
 	wordsPerMinuteMax: number;
+	accuracyMin: number;
+	accuracyMax: number;
 }>;
 
-export type ILessonLanguageEntity = ISettingEntityWrapper<string>;
+export type ILessonLanguage = ISettingWrapper<string>;
 
-export type ITypingTestTextEntity = ISettingEntityWrapper<{
+export type ITypingTestText = ISettingWrapper<{
 	words: string;
 	isShuffle: boolean;
 	hasUppercase: boolean;
 }>;
 
-export type ITypingTestLimitEntity = ISettingEntityWrapper<{
+export type ITypingTestLimit = ISettingWrapper<{
 	amount: number;
 	type: string;
 }>;
 
 export type ISettingsEntity = {
-	sound: ISoundEntity;
-	theme: IThemeEntity;
-	lessonLevel: ILessonLevelEntity;
-	lessonLanguage: ILessonLanguageEntity;
-	typingTestText: ITypingTestTextEntity;
-	typingTestLimit: ITypingTestLimitEntity;
+	sound: ISound;
+	theme: ITheme;
+	lessonLevel: ILessonLevel;
+	lessonLanguage: ILessonLanguage;
+	typingTestText: ITypingTestText;
+	typingTestLimit: ITypingTestLimit;
 };

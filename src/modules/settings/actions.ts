@@ -1,20 +1,24 @@
-import produce from 'immer';
+import { APP_STATUS } from '@/constants/app';
+import { INITAL_SETTINGS, SETTING_STORAGE } from '@/constants/settings';
 
-import { APP_STATUS, APP_STORAGE, SETTINGS } from '@/modules/config';
-import { SettingsContext, settingsSchema } from '.';
+import { clearLocalStorage, readLocalStorage, writeLocalStorage } from '@/helpers/localStorage';
 
-type LocalSettings = Record<keyof typeof SETTINGS, any>;
+import { ISettingsEntity, SettingsContext, settingsSchema } from '.';
 
-export function actionConvertSettings(settings: LocalSettings) {
-	let settingState = { ...SETTINGS };
+type ILocalSettings = Record<keyof typeof INITAL_SETTINGS, any>;
 
+export type ActionConvertSettings = (payload: { settings: ILocalSettings }) => ISettingsEntity;
+
+export const actionConvertSettings: ActionConvertSettings = ({ settings }) => {
+	let settingState = { ...INITAL_SETTINGS };
 	let settingKey: keyof typeof settings;
+
 	for (settingKey in settings) {
 		if (
 			Object.prototype.hasOwnProperty.call(settings, settingKey) &&
 			Object.prototype.hasOwnProperty.call(settingState, settingKey)
 		) {
-			const settingOptionState: any = settingState[settingKey].options;
+			const settingOptionsState: any = settingState[settingKey].options;
 			const setting = settings[settingKey];
 			settingState[settingKey].selected = setting.selected;
 
@@ -23,12 +27,12 @@ export function actionConvertSettings(settings: LocalSettings) {
 					const option = setting.options[optionKey];
 
 					if (
-						!settingOptionState[optionKey] ||
-						(settingOptionState[optionKey] && !settingOptionState[optionKey].isDefault)
+						!settingOptionsState[optionKey] ||
+						(settingOptionsState[optionKey] && !settingOptionsState[optionKey].isDefault)
 					) {
-						settingOptionState[optionKey].name = option.name;
-						settingOptionState[optionKey].isDefault = false;
-						settingOptionState[optionKey].value = option.value;
+						settingOptionsState[optionKey].name = option.name;
+						settingOptionsState[optionKey].isDefault = false;
+						settingOptionsState[optionKey].value = option.value;
 					}
 				}
 			}
@@ -36,21 +40,23 @@ export function actionConvertSettings(settings: LocalSettings) {
 	}
 
 	return settingState;
-}
+};
 
-export async function actionResetSettings() {
-	const { storage } = SettingsContext.getState();
-	const settings: Partial<LocalSettings> = {};
+export type ActionResetSettings = () => void;
 
-	let settingKey: keyof typeof SETTINGS;
-	for (settingKey in SETTINGS) {
-		if (Object.prototype.hasOwnProperty.call(SETTINGS, settingKey)) {
-			const primaryDefault = SETTINGS[settingKey].primaryDefault;
-			const options: any = SETTINGS[settingKey].options;
+export const actionResetSettings: ActionResetSettings = () => {
+	let settings: Partial<ILocalSettings> = {};
+	let settingKey: keyof typeof INITAL_SETTINGS;
 
-			settings[settingKey] = {};
-			settings[settingKey].selected = primaryDefault;
-			settings[settingKey].options = {};
+	for (settingKey in INITAL_SETTINGS) {
+		if (Object.prototype.hasOwnProperty.call(INITAL_SETTINGS, settingKey)) {
+			const primaryDefault = INITAL_SETTINGS[settingKey].primaryDefault;
+			const options: any = INITAL_SETTINGS[settingKey].options;
+
+			settings[settingKey] = {
+				selected: primaryDefault,
+				options: {},
+			};
 
 			let optionKey: string;
 			for (optionKey in options) {
@@ -58,85 +64,112 @@ export async function actionResetSettings() {
 					const option = options[optionKey];
 
 					if (!option.isDefault) {
-						settings[settingKey].options[optionKey] = {};
-						settings[settingKey].options[optionKey].name = option.name;
-						settings[settingKey].options[optionKey].value = option.value;
+						settings[settingKey].options[optionKey] = {
+							name: option.name,
+							value: option.value,
+						};
 					}
 				}
 			}
 		}
 	}
 
-	await storage?.clear(APP_STORAGE.collections.settings);
-	await storage?.add(APP_STORAGE.collections.settings, settings, 'version_1');
-}
+	clearLocalStorage(SETTING_STORAGE);
+	writeLocalStorage(SETTING_STORAGE, settings);
+};
 
-export async function actionGetSettings() {
-	const { storage } = SettingsContext.getState();
+export type ActionGetSettings = () => void;
+
+export const actionGetSettings: ActionGetSettings = () => {
+	const localSettings = readLocalStorage(SETTING_STORAGE);
 
 	try {
-		const localSetting = await storage?.get(APP_STORAGE.collections.settings, 'version_1');
-		settingsSchema.strictParser(localSetting);
+		settingsSchema.strictParser(localSettings);
 
-		const settings = actionConvertSettings(localSetting);
+		const settings = actionConvertSettings({ settings: localSettings });
 		SettingsContext.setState(prevState => ({
 			...prevState,
 			status: APP_STATUS.ready,
 			entity: settings,
 		}));
-	} catch (error) {
+	} catch (err) {
 		actionResetSettings();
 		SettingsContext.setState(prevState => ({ ...prevState, status: APP_STATUS.ready }));
 	}
-}
+};
 
-export async function actionToggleSetting(
-	settingName: keyof typeof SETTINGS,
-	settingSelected: string
-) {
-	const { storage } = SettingsContext.getState();
+export type ActionToggleSetting = (payload: {
+	settingName: keyof typeof INITAL_SETTINGS;
+	settingSelected: string;
+}) => {
+	error: null | string;
+};
+
+export const actionToggleSetting: ActionToggleSetting = ({ settingName, settingSelected }) => {
+	const localSettings: ILocalSettings = readLocalStorage(SETTING_STORAGE);
 
 	try {
-		const settings = await storage?.get(APP_STORAGE.collections.settings, 'version_1');
-		SettingsContext.setState(
-			produce(draft => {
-				if (settings && draft.entity[settingName]?.options[settingSelected]) {
-					draft.entity[settingName].selected = settingSelected;
-					settings[settingName].selected = settingSelected;
-					storage?.put(APP_STORAGE.collections.settings, settings, 'version_1');
-				}
-			})
-		);
-	} catch (error: any) {
-		throw error.format();
+		settingsSchema.strictParser(localSettings);
+		let settings = actionConvertSettings({ settings: localSettings });
+
+		if (settings[settingName].options[settingSelected]) {
+			localSettings[settingName].selected = settingSelected;
+			settings[settingName].selected = settingSelected;
+
+			SettingsContext.setState(prevState => ({ ...prevState, entity: settings }));
+			writeLocalStorage(SETTING_STORAGE, localSettings);
+
+			return { error: null };
+		} else {
+			throw new Error('error');
+		}
+	} catch (err) {
+		actionResetSettings();
+		SettingsContext.setState(prevState => ({ ...prevState, entity: INITAL_SETTINGS }));
+
+		return { error: 'Something Wrong' };
 	}
-}
+};
 
-export async function actionUpdateSetting(
-	settingName: keyof typeof SETTINGS,
-	settingKey: string,
-	settingValue: any
-) {
-	const { storage } = SettingsContext.getState();
+export type ActionUpdateSetting = (payload: {
+	settingName: keyof typeof INITAL_SETTINGS;
+	settingKey: string;
+	settingValue: any;
+}) => {
+	error: null | string;
+};
+
+export const actionUpdateSetting: ActionUpdateSetting = ({
+	settingName,
+	settingKey,
+	settingValue,
+}) => {
+	let localSettings: ILocalSettings = readLocalStorage(SETTING_STORAGE);
 
 	try {
-		const settings = await storage?.get(APP_STORAGE.collections.settings, 'version_1');
-		settingsSchema.strictParser(settings);
+		settingsSchema.strictParser(localSettings);
+		let settings = actionConvertSettings({ settings: localSettings });
 
-		if (settings[settingName]?.options[settingKey]) {
+		if (localSettings[settingName] && settings[settingName]?.options[settingKey]) {
 			settingsSchema.children[settingName].children['options'].strictParser({ settingValue });
 
-			SettingsContext.setState(
-				produce(draft => {
-					draft.entity[settingName].options[settingKey].name = settingValue.name;
-					draft.entity[settingName].options[settingKey].value = settingValue.value;
+			localSettings[settingName].options[settingKey].name = settingValue.name;
+			localSettings[settingName].options[settingKey].value = settingValue.value;
 
-					settings[settingName].options[settingKey] = settingValue;
-					storage?.put(APP_STORAGE.collections.settings, settings, 'version_1');
-				})
-			);
+			settings[settingName].options[settingKey].name = settingValue.name;
+			settings[settingName].options[settingKey].value = settingValue.value;
+
+			SettingsContext.setState(prevState => ({ ...prevState, entity: settings }));
+			writeLocalStorage(SETTING_STORAGE, localSettings);
+
+			return { error: null };
+		} else {
+			throw new Error('error');
 		}
-	} catch (error: any) {
-		throw error.format();
+	} catch (err) {
+		actionResetSettings();
+		SettingsContext.setState(prevState => ({ ...prevState, entity: INITAL_SETTINGS }));
+
+		return { error: 'Something Wrong' };
 	}
-}
+};
