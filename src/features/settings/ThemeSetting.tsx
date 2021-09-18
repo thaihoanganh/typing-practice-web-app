@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import produce from 'immer';
 
 import { setGlobalColors } from '@/helpers/color';
+
 import {
 	IThemeSchema,
-	useSettings,
+	SettingsContext,
 	actionToggleSetting,
 	actionUpdateSetting,
 } from '@/modules/settings';
@@ -21,7 +22,7 @@ interface ThemeSettingState {
 }
 
 export const ThemeSetting: React.FC = () => {
-	const { options, selected } = useSettings().settings.theme;
+	const { options, selected } = useContext(SettingsContext.initial).entity.theme;
 
 	const [state, setState] = useState<ThemeSettingState>(() => handleSetStateValue());
 
@@ -45,7 +46,10 @@ export const ThemeSetting: React.FC = () => {
 	}, [state.option.value.primary, state.option.value.secondary]);
 
 	const toggleThemeSetting = (settingSelected: string) => {
-		actionToggleSetting('theme', settingSelected);
+		actionToggleSetting({
+			settingName: 'theme',
+			settingSelected,
+		});
 	};
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,16 +69,23 @@ export const ThemeSetting: React.FC = () => {
 		}
 	};
 
-	const handleUpdateTheme = () => {
+	const handleUpdateTheme = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
 		if (options[selected].isDefault === false) {
-			actionUpdateSetting('theme', selected, JSON.parse(JSON.stringify(state.option)))
-				.then(() => {
-					Toast({ message: 'Cập nhật thành công' });
-				})
-				.catch(() => {
-					setState(handleSetStateValue());
-					Toast({ isError: true, message: 'Cập nhật thất bại' });
+			if (options[selected].isDefault === false) {
+				const { error } = actionUpdateSetting({
+					settingName: 'theme',
+					settingKey: selected,
+					settingValue: JSON.parse(JSON.stringify(state.option)),
 				});
+
+				if (error) {
+					Toast({ message: 'Cập nhật thất bại' });
+				} else {
+					Toast({ message: 'Cập nhật thành công' });
+				}
+			}
 		}
 	};
 
@@ -111,96 +122,98 @@ export const ThemeSetting: React.FC = () => {
 					))}
 				</div>
 
-				<div className="mt-lg">
-					<div>
-						<Input
-							name="name"
-							placeholder="Tên chủ đề"
-							autoComplete="off"
-							value={state.option.name}
-							disabled={options[selected].isDefault}
-							fullWidth
-							onChange={handleChange}
-						/>
-					</div>
-
-					<div className="flex flex-wrap">
-						<div className="flex-grow w-full desktop:w-auto mt-md">
-							<h3 className="text-body text-contrast-secondary text-opacity-60">Primary</h3>
-							<div className="mt-sm">
-								<Input
-									name="primary"
-									autoComplete="off"
-									maxLength={7}
-									disabled={options[selected].isDefault}
-									value={state.option.value.primary}
-									onChange={handleChange}
-									fullWidth
-									suffix={
-										<label className="flex h-full pl-sm">
-											<input
-												type="color"
-												className="invisible"
-												name="primary"
-												disabled={options[selected].isDefault}
-												value={state.option.value.primary}
-												onChange={handleChange}
-											/>
-											<div
-												className="w-48 h-full border border-contrast-secondary border-opacity-12 rounded"
-												style={{ backgroundColor: state.option.value.primary }}
-											/>
-										</label>
-									}
-								/>
-							</div>
+				<form onSubmit={handleUpdateTheme}>
+					<div className="mt-lg">
+						<div>
+							<Input
+								name="name"
+								placeholder="Tên chủ đề"
+								autoComplete="off"
+								value={state.option.name}
+								disabled={options[selected].isDefault}
+								fullWidth
+								onChange={handleChange}
+							/>
 						</div>
 
-						<div className="flex-grow w-full desktop:w-auto mt-md desktop:ml-md">
-							<h3 className="text-body text-contrast-secondary text-opacity-60">Secondary</h3>
-							<div className="mt-sm">
-								<Input
-									name="secondary"
-									autoComplete="off"
-									maxLength={7}
-									disabled={options[selected].isDefault}
-									value={state.option.value.secondary}
-									onChange={handleChange}
-									fullWidth
-									suffix={
-										<label className="flex h-full pl-sm">
-											<input
-												type="color"
-												className="invisible"
-												name="secondary"
-												disabled={options[selected].isDefault}
-												value={state.option.value.secondary}
-												onChange={handleChange}
-											/>
-											<div
-												className="w-48 h-full border border-contrast-secondary border-opacity-12 rounded"
-												style={{ backgroundColor: state.option.value.secondary }}
-											/>
-										</label>
-									}
-								/>
+						<div className="flex flex-wrap">
+							<div className="flex-grow w-full desktop:w-auto mt-md">
+								<h3 className="text-body text-contrast-secondary text-opacity-60">Primary</h3>
+								<div className="mt-sm">
+									<Input
+										name="primary"
+										autoComplete="off"
+										maxLength={7}
+										disabled={options[selected].isDefault}
+										value={state.option.value.primary}
+										onChange={handleChange}
+										fullWidth
+										suffix={
+											<label className="flex h-full pl-sm">
+												<input
+													type="color"
+													className="invisible"
+													name="primary"
+													disabled={options[selected].isDefault}
+													value={state.option.value.primary}
+													onChange={handleChange}
+												/>
+												<div
+													className="w-48 h-full border border-contrast-secondary border-opacity-12 rounded"
+													style={{ backgroundColor: state.option.value.primary }}
+												/>
+											</label>
+										}
+									/>
+								</div>
+							</div>
+
+							<div className="flex-grow w-full desktop:w-auto mt-md desktop:ml-md">
+								<h3 className="text-body text-contrast-secondary text-opacity-60">Secondary</h3>
+								<div className="mt-sm">
+									<Input
+										name="secondary"
+										autoComplete="off"
+										maxLength={7}
+										disabled={options[selected].isDefault}
+										value={state.option.value.secondary}
+										onChange={handleChange}
+										fullWidth
+										suffix={
+											<label className="flex h-full pl-sm">
+												<input
+													type="color"
+													className="invisible"
+													name="secondary"
+													disabled={options[selected].isDefault}
+													value={state.option.value.secondary}
+													onChange={handleChange}
+												/>
+												<div
+													className="w-48 h-full border border-contrast-secondary border-opacity-12 rounded"
+													style={{ backgroundColor: state.option.value.secondary }}
+												/>
+											</label>
+										}
+									/>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
 
-				<div className="inline-flex w-full desktop:w-auto mt-lg">
-					<Button
-						disabled={
-							options[selected].isDefault ||
-							(options[selected].isDefault === false && state.isEdited === false)
-						}
-						fullWitdh
-						onClick={handleUpdateTheme}
-					>
-						CẬP NHẬT
-					</Button>
-				</div>
+					<div className="inline-flex w-full desktop:w-auto mt-lg">
+						<Button
+							type="submit"
+							disabled={
+								options[selected].isDefault ||
+								(options[selected].isDefault === false && state.isEdited === false)
+							}
+							fullWitdh
+						>
+							CẬP NHẬT
+						</Button>
+					</div>
+				</form>
 			</div>
 		</Accordion>
 	);

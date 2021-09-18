@@ -1,14 +1,17 @@
-import React from 'react';
-import { useSettings, actionToggleSetting } from '@/modules/settings';
+import React, { useContext } from 'react';
+import { SettingsContext, actionToggleSetting } from '@/modules/settings';
 
 import Radio from '@/components/atoms/Radio';
 import Accordion from '@/components/molecules/Accordion';
 
 export const SoundSetting: React.FC = () => {
-	const { options, selected } = useSettings().settings.sound;
+	const { options, selected } = useContext(SettingsContext.initial).entity.sound;
 
 	const toggleSoundSetting = (settingSelected: string) => {
-		actionToggleSetting('sound', settingSelected);
+		actionToggleSetting({
+			settingName: 'sound',
+			settingSelected,
+		});
 	};
 
 	return (
