@@ -76,6 +76,7 @@ export const TypingTestLimitSetting: React.FC = () => {
 				Toast({ message: 'Cập nhật thất bại' });
 			} else {
 				Toast({ message: 'Cập nhật thành công' });
+				setState(prevState => ({ ...prevState, isEdited: false }));
 			}
 		}
 	};
