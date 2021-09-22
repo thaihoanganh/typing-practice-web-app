@@ -3,14 +3,14 @@ import Head from 'next/head';
 
 import { PracticeProvider } from '@/modules/practice';
 
-import { LessonController, LessonList } from '@/features/lesson';
 import { PracticeData, PracticeStatistics } from '@/features/practice';
+import { SpeedTestController } from '@/features/speedTest';
 
-const HomePage: React.FC = () => {
+const SpeedTestPage: React.FC = () => {
 	return (
 		<React.Fragment>
 			<Head>
-				<title>Tập gõ phím</title>
+				<title>Kiểm tra tốc độ gõ</title>
 			</Head>
 			<PracticeProvider>
 				<div className="p-sm desktop:p-md">
@@ -18,13 +18,10 @@ const HomePage: React.FC = () => {
 						<PracticeData />
 					</div>
 					<div className="mt-md">
-						<LessonController />
+						<SpeedTestController />
 					</div>
-					<div className="mt-md">
+					<div className="mt-lg">
 						<PracticeStatistics />
-					</div>
-					<div className="mt-md">
-						<LessonList />
 					</div>
 				</div>
 			</PracticeProvider>
@@ -32,4 +29,4 @@ const HomePage: React.FC = () => {
 	);
 };
 
-export default HomePage;
+export default SpeedTestPage;
