@@ -1,14 +1,17 @@
-import React from 'react';
-import { useSettings, actionToggleSetting } from '@/modules/settings';
+import React, { useContext } from 'react';
+import { SettingsContext, actionToggleSetting } from '@/modules/settings';
 
 import Radio from '@/components/atoms/Radio';
 import Accordion from '@/components/molecules/Accordion';
 
 export const SoundSetting: React.FC = () => {
-	const { options, selected } = useSettings().settings.sound;
+	const { options, selected } = useContext(SettingsContext.initial).entity.sound;
 
 	const toggleSoundSetting = (settingSelected: string) => {
-		actionToggleSetting('sound', settingSelected);
+		actionToggleSetting({
+			settingName: 'sound',
+			settingSelected,
+		});
 	};
 
 	return (
@@ -28,10 +31,10 @@ export const SoundSetting: React.FC = () => {
 			isOpen
 			title="Âm thanh"
 		>
-			<div className="py-sm">
-				<div className="flex">
+			<React.Fragment>
+				<div className="flex flex-wrap">
 					{Object.keys(options).map((settingKey: string) => (
-						<div key={settingKey} className="mr-md">
+						<div key={settingKey} className="pt-md mr-md">
 							<Radio
 								name="sound"
 								defaultChecked={selected === settingKey}
@@ -43,7 +46,7 @@ export const SoundSetting: React.FC = () => {
 						</div>
 					))}
 				</div>
-			</div>
+			</React.Fragment>
 		</Accordion>
 	);
 };

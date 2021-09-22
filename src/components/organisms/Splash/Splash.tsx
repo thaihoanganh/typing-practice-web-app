@@ -42,23 +42,25 @@ export const Splash: React.FC = () => {
 	}, [keyActive]);
 
 	return (
-		<div
-			className="grid grid-cols-5 gap-md w-360 p-md rounded-md border-8 border-contrast-secondary border-opacity-60"
-			ref={splashRef}
-		>
-			<div className="h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
-			<div className="h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
-			<div className="h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
-			<div className="h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
-			<div className="h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
-			<div className="h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
-			<div className="h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
-			<div className="h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
-			<div className="h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
-			<div className="h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
-			<div className="h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
-			<div className="col-span-3 h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
-			<div className="h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
+		<div className="fixed inset-0 flex items-center justify-center">
+			<div
+				className="grid grid-cols-5 gap-md w-360 p-md rounded-md border-8 border-contrast-secondary border-opacity-60"
+				ref={splashRef}
+			>
+				<div className="h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
+				<div className="h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
+				<div className="h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
+				<div className="h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
+				<div className="h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
+				<div className="h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
+				<div className="h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
+				<div className="h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
+				<div className="h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
+				<div className="h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
+				<div className="h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
+				<div className="col-span-3 h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
+				<div className="h-36 rounded-sm border-8 border-contrast-secondary border-opacity-60 duration-75" />
+			</div>
 		</div>
 	);
 };

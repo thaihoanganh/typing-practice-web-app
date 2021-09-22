@@ -1,55 +1,40 @@
 import produce from 'immer';
 
-import { shuffle, getMostCommon } from '@/utils/array';
-import { typingSound } from '@/helpers/sound';
-import { SettingsContext } from '@/modules/settings';
-import { IPracticeEntity, PracticeContext, INITIAL_PRACTICE_DATA } from '.';
+import { APP_STATUS } from '@/constants/app';
 
-export function actionCreatePracticeData(words: string, isShuffle: boolean) {
-	let wordsArray = words.split(' ');
+import { getMostCommon } from '@/utils/array';
+import { round } from '@/utils/number';
 
-	if (isShuffle) wordsArray = shuffle(wordsArray);
+import { PracticeContext, INITIAL_PRACTICE } from '.';
 
-	const practiceData = wordsArray.map((word: string) => {
-		return [...word.split(''), '\u00A0'];
-	});
-
-	return practiceData;
-}
-
-export function actionSetPractice(practiceData: IPracticeEntity['data'], isCheckAfterWord = false) {
+export type ActionSetPractice = (payload: { data: string[][] }) => void;
+export const actionSetPractice: ActionSetPractice = ({ data }) => {
 	PracticeContext.setState(
 		produce(draft => {
-			draft.entity = INITIAL_PRACTICE_DATA;
-			draft.entity.isCheckAfterWord = isCheckAfterWord;
-			draft.entity.data = practiceData;
+			draft.status = APP_STATUS.ready;
+			draft.entity = { ...INITIAL_PRACTICE, data };
 		})
 	);
-}
+};
 
-export function actionToggleReadyTyping(isReady?: boolean) {
+export type ActionToggleReady = (payload: { isReady: boolean }) => void;
+export const actionToggleReady: ActionToggleReady = ({ isReady }) => {
 	PracticeContext.setState(
 		produce(draft => {
-			draft.entity.isReady = isReady || !draft.entity.isReady;
+			draft.entity.isReady = isReady;
 		})
 	);
-}
+};
 
-export function actionHandleTyping(draftCharacter: string, draftWord: string) {
-	const { entity } = SettingsContext.getState();
-	if (entity.sound.options[entity.sound.selected].value) typingSound.play();
-
+export type ActionHandleTyping = (payload: { draftWord: string }) => void;
+export const actionHandleTyping: ActionHandleTyping = ({ draftWord }) => {
 	PracticeContext.setState(
 		produce(draft => {
-			const { wordCursor, isCheckAfterWord, isCompleted, isReady, isTyping, data } = draft.entity;
+			const { wordCursor, isCompleted, isReady, isTyping, data } = draft.entity;
+			const draftCharacter = draftWord[draftWord.length - 1];
 			const spacingCharacter = ' ';
 
-			if (
-				isReady &&
-				!isCompleted &&
-				typeof draftCharacter == 'string' &&
-				typeof draftWord == 'string'
-			) {
+			if (isReady && !isCompleted) {
 				const getTimeNow = new Date().getTime();
 				const wordCurrent: any = data[wordCursor];
 
@@ -59,14 +44,12 @@ export function actionHandleTyping(draftCharacter: string, draftWord: string) {
 				}
 
 				wordCurrent.map((character: any, characterIndex: number) => {
-					if (characterIndex < draftWord.length) {
-						const isIncorrect =
-							character.value !==
-							(draftWord[characterIndex] === spacingCharacter
-								? '\u00A0'
-								: draftWord[characterIndex]);
+					const isIncorrect =
+						(typeof character === 'object' ? character.value : character) !==
+						((draftWord[characterIndex] || '').trim() || '\u00A0');
 
-						if (typeof character == 'object') {
+					if (characterIndex < draftWord.length) {
+						if (typeof character === 'object') {
 							wordCurrent[characterIndex].isIncorrect = isIncorrect;
 						} else {
 							wordCurrent[characterIndex] = {
@@ -91,22 +74,23 @@ export function actionHandleTyping(draftCharacter: string, draftWord: string) {
 				if (spacingCharacter === draftCharacter) {
 					if (wordCursor < data.length - 1) {
 						draft.entity.wordCursor += 1;
-						if (!isCheckAfterWord) draft.entity.chracterCursor == 0;
 					} else {
 						draft.entity.isCompleted = true;
 						draft.entity.isReady = false;
 						draft.entity.isTyping = false;
 						draft.entity.statistics.timeEnd = getTimeNow;
 					}
-				} else if (!isCheckAfterWord && draftWord.length < wordCurrent.length) {
-					draft.entity.chracterCursor += 1;
+					draft.entity.characterCursor = 0;
+				} else if (draftWord.length < wordCurrent.length) {
+					draft.entity.characterCursor = draftWord.length;
 				}
 			}
 		})
 	);
-}
+};
 
-export function actionStopPractice() {
+export type ActionStopPractice = () => void;
+export const actionStopPractice = () => {
 	PracticeContext.setState(
 		produce(draft => {
 			const { wordCursor, data } = draft.entity;
@@ -129,43 +113,59 @@ export function actionStopPractice() {
 			draft.entity.statistics.timeEnd = getTimeNow;
 		})
 	);
-}
+};
 
+export type ActionPracticeStatistics = () => void;
 export function actionPracticeStatistics() {
 	PracticeContext.setState(
 		produce(draft => {
 			const { data, statistics } = draft.entity;
-
 			const words = data.filter(word => typeof word[0] === 'object');
-			let charactersIncrrect: string[] = [];
 
-			statistics.totalTime = statistics.timeEnd - statistics.timeStart;
-			statistics.totalWords = words.length;
+			const totalWords = words.length;
+			const totalTime = statistics.timeEnd - statistics.timeStart;
+			const wordsPerMinute = round(totalWords / (totalTime / 1000 / 60));
 
+			let totalCharacters = 0;
+			let totalWordsIncorrect = 0;
+			let charactersIncorrect: string[] = [];
+			let graph: any = [];
+
+			let totalTimeWord = 0;
+			let timeStartWordTyping = 0;
 			words.map((word, wordIndex) => {
-				statistics.totalCharacters += word.length;
-				let charactersIncrrectOfWord: string[] = [];
+				let charactersIncorrectOfWord: string[] = [];
+				totalCharacters += word.length;
 
-				const totalTimeTypingWord = word.reduce<number>((totalTime, character: any) => {
-					if (character.isIncorrect) charactersIncrrectOfWord.push(character.value);
-					return typeof character === 'string' ? totalTime : character.typedAt - totalTime;
-				}, 0);
+				const totalTimeWordArray = word
+					.map((character: any) => {
+						if (character.isIncorrect) charactersIncorrectOfWord.push(character.value);
+						return character.typedAt;
+					})
+					.filter((typedAt: any) => typeof typedAt === 'number');
 
-				statistics.graph.push([
-					wordIndex + 1,
-					1 / (totalTimeTypingWord / 1000 / 60),
-					charactersIncrrectOfWord.length,
-				]);
+				if (totalTimeWordArray.length) {
+					const timeEndWordTyping = totalTimeWordArray[totalTimeWordArray.length - 1] / 1000 / 60;
+					totalTimeWord = timeEndWordTyping - timeStartWordTyping;
+					timeStartWordTyping = timeEndWordTyping;
+				}
 
-				if (charactersIncrrectOfWord.length) {
-					statistics.totalWordsIncorrect += 1;
-					charactersIncrrect = [...charactersIncrrect, ...charactersIncrrectOfWord];
+				graph.push([wordIndex + 1, 1 / totalTimeWord, charactersIncorrectOfWord.length]);
+
+				if (charactersIncorrectOfWord.length) {
+					totalWordsIncorrect += 1;
+					charactersIncorrect = [...charactersIncorrect, ...charactersIncorrectOfWord];
 				}
 			});
 
-			statistics.wordsPerMinute = 1 - charactersIncrrect.length / statistics.totalCharacters;
-			statistics.accuracy = statistics.totalWords / (statistics.totalTime / 1000 / 60);
-			statistics.mostIncorrectCharacter = getMostCommon(charactersIncrrect);
+			statistics.totalCharacters = totalCharacters;
+			statistics.totalWords = totalWords;
+			statistics.totalWordsIncorrect = totalWordsIncorrect;
+			statistics.totalTime = round(totalTime / 1000);
+			statistics.accuracy = round(1 - totalWordsIncorrect / totalWords);
+			statistics.wordsPerMinute = wordsPerMinute;
+			statistics.mostIncorrectCharacter = getMostCommon(charactersIncorrect);
+			statistics.graph = graph;
 		})
 	);
 }

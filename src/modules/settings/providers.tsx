@@ -1,36 +1,29 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { openDB } from 'idb';
+import react, { useMemo, useState, useEffect } from 'react';
+
+import { APP_STATUS } from '@/constants/app';
+import { INITIAL_SETTINGS } from '@/constants/settings';
+
 import { createAppContext } from '@/helpers/context';
-import { setGlobalColors } from '@/helpers/color';
-import { IAppProviderWrapper, APP_STATUS, APP_STORAGE, SETTINGS } from '@/modules/config';
+
 import { ISettingsEntity, actionGetSettings } from '.';
+import { setGlobalColors } from '@/helpers/color';
 
-export type ISettingProviderState = IAppProviderWrapper<ISettingsEntity>;
+export interface ISettingsState {
+	status: string;
+	entity: ISettingsEntity;
+}
 
-export const SettingsContext = createAppContext<ISettingProviderState>();
+export const SettingsContext = createAppContext<ISettingsState>();
 
 export const SettingsProvider: React.FC = ({ children }) => {
-	const [state, setState] = useState<ISettingProviderState>({
+	const [state, setState] = useState<ISettingsState>({
 		status: APP_STATUS.loading,
-		entity: SETTINGS,
-		storage: null,
+		entity: INITIAL_SETTINGS,
 	});
 
 	useEffect(() => {
-		openDB(APP_STORAGE.name, 1, {
-			upgrade(storage) {
-				storage.createObjectStore(APP_STORAGE.collections.settings);
-			},
-		}).then(storage => {
-			setState(prevState => ({ ...prevState, storage }));
-		});
+		actionGetSettings();
 	}, []);
-
-	useEffect(() => {
-		if (state.storage !== null) {
-			actionGetSettings();
-		}
-	}, [state.storage]);
 
 	useEffect(() => {
 		if (APP_STATUS.ready === state.status) {
@@ -44,5 +37,3 @@ export const SettingsProvider: React.FC = ({ children }) => {
 
 	return <SettingsContext.Provider value={exportValue}>{children}</SettingsContext.Provider>;
 };
-
-export default SettingsProvider;

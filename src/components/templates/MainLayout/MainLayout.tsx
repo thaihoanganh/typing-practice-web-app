@@ -12,7 +12,7 @@ export interface IMainLayoutState {
 	timeStart: number;
 }
 
-const MINIMUM_LOAD_TIME = 1000;
+const MINIMUM_LOAD_TIME = 1500;
 
 const MainLayout: React.FC<MainLayoutProps> = ({ header, content, loading, isLoading }) => {
 	const [state, setState] = useState<IMainLayoutState>(() => ({

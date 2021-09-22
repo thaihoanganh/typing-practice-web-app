@@ -2,17 +2,12 @@ export interface IPracticeEntity {
 	/*
 		Cursor of character is typing
 	*/
-	chracterCursor: number;
+	characterCursor: number;
 
 	/*
 		Cursor of word is typing
 	*/
 	wordCursor: number;
-
-	/*
-
-	 */
-	isCheckAfterWord: boolean;
 
 	/*
 		Is the practice test completed
