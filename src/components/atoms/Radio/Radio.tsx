@@ -9,7 +9,7 @@ export interface RadioProps
 }
 
 export const Radio = forwardRef<HTMLInputElement, RadioProps>(
-	({ className, children, disabled, bordered, onChange, ...otherProps }, ref) => {
+	({ className, children, disabled, bordered, ...otherProps }, ref) => {
 		return (
 			<label
 				className={classNames(
