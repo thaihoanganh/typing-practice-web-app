@@ -24,28 +24,30 @@ interface ThemeSettingState {
 export const ThemeSetting: React.FC = () => {
 	const { options, selected } = useContext(SettingsContext.initial).entity.theme;
 
-	const [state, setState] = useState<ThemeSettingState>(() => handleSetStateValue());
+	const [state, setState] = useState<ThemeSettingState>({
+		isEdited: false,
+		option: {
+			name: options[selected].name,
+			value: options[selected].value,
+		},
+	});
 
 	useEffect(() => {
-		setState(handleSetStateValue());
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [selected, options[selected]]);
-
-	function handleSetStateValue() {
-		return {
+		setState({
 			isEdited: false,
 			option: {
 				name: options[selected].name,
 				value: options[selected].value,
 			},
-		};
-	}
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [selected, options[selected]]);
 
 	useEffect(() => {
 		setGlobalColors(state.option.value.primary, state.option.value.secondary);
 	}, [state.option.value.primary, state.option.value.secondary]);
 
-	const toggleThemeSetting = (settingSelected: string) => {
+	const handleToggleSetting = (settingSelected: string) => {
 		actionToggleSetting({
 			settingName: 'theme',
 			settingSelected,
@@ -107,13 +109,13 @@ export const ThemeSetting: React.FC = () => {
 			title="Chủ đề"
 		>
 			<div className="py-sm">
-				<div className="flex">
+				<div className="flex flex-wrap">
 					{Object.keys(options).map((settingKey: string) => (
-						<div key={settingKey} className="mr-md">
+						<div key={settingKey} className="pt-md mr-md">
 							<Radio
 								name="theme"
 								defaultChecked={selected === settingKey}
-								onClick={() => toggleThemeSetting(settingKey)}
+								onClick={() => handleToggleSetting(settingKey)}
 								bordered
 							>
 								{options[settingKey].name}
@@ -138,7 +140,9 @@ export const ThemeSetting: React.FC = () => {
 
 						<div className="flex flex-wrap">
 							<div className="flex-grow w-full desktop:w-auto mt-md">
-								<h3 className="text-body text-contrast-secondary text-opacity-60">Primary</h3>
+								<h3 className="text-body text-contrast-secondary text-opacity-60 font-semibold">
+									Primary
+								</h3>
 								<div className="mt-sm">
 									<Input
 										name="primary"
@@ -169,7 +173,9 @@ export const ThemeSetting: React.FC = () => {
 							</div>
 
 							<div className="flex-grow w-full desktop:w-auto mt-md desktop:ml-md">
-								<h3 className="text-body text-contrast-secondary text-opacity-60">Secondary</h3>
+								<h3 className="text-body text-contrast-secondary text-opacity-60 font-semibold">
+									Secondary
+								</h3>
 								<div className="mt-sm">
 									<Input
 										name="secondary"

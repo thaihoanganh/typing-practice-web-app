@@ -31,10 +31,10 @@ export const SoundSetting: React.FC = () => {
 			isOpen
 			title="Âm thanh"
 		>
-			<div className="py-sm">
-				<div className="flex">
+			<React.Fragment>
+				<div className="flex flex-wrap">
 					{Object.keys(options).map((settingKey: string) => (
-						<div key={settingKey} className="mr-md">
+						<div key={settingKey} className="pt-md mr-md">
 							<Radio
 								name="sound"
 								defaultChecked={selected === settingKey}
@@ -46,7 +46,7 @@ export const SoundSetting: React.FC = () => {
 						</div>
 					))}
 				</div>
-			</div>
+			</React.Fragment>
 		</Accordion>
 	);
 };
