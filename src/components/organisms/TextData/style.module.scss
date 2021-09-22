@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+
+.text-wrapper-wrapper {
+	position: relative;
+	height: calc(0.5em + (1.25em + 3px) * 4);
+	padding: 0.25em 0.5em;
+	font-family: 'Roboto Mono', monospace;
+	font-size: 1.85rem;
+	line-height: 1.25em;
+	border: 1px solid rgba(var(--contrast-secondary), 0.12);
+	border-radius: 4px;
+}
+
+.character {
+	color: rgba(var(--contrast-secondary), 0.4);
+	border-bottom: 2px solid transparent;
+
+	&__correct {
+		color: rgba(var(--contrast-secondary), 0.75);
+	}
+
+	&__incorrect {
+		color: rgba(var(--danger), 0.8);
+	}
+
+	&__spacing_incorrect {
+		border-bottom-color: rgba(var(--danger), 1);
+	}
+
+	&__cursor {
+		border-bottom-color: rgba(var(--primary), 1);
+	}
+}
+
+.text-data-input-overlay {
+	font-size: 0.55em;
+	background-image: linear-gradient(to bottom, transparent, rgb(var(--secondary), 1) 65%);
+	opacity: 1;
+}
+
+.text-data-input__show-draft {
+	height: calc((0.25em + (1.25em + 2px) * 1) / 0.75);
+	padding: 0 calc(0.5em / 0.75);
+	font-size: calc(1em * 0.75);
+	color: rgb(var(--contrast-secondary), 0.75);
+	background-color: rgb(var(--secondary), 1);
+	border-top: 1px solid rgb(var(--contrast-secondary), 0.12);
+	opacity: 1;
+}

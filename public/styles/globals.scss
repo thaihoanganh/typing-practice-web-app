@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap');
+
+:root {
+	--primary: 0, 180, 100;
+	--contrast-primary: 255, 255, 255;
+	--secondary: 24, 24, 24;
+	--contrast-secondary: 255, 255, 255;
+	--danger: 222, 66, 66;
+	--contrast-danger: 255, 255, 255;
+}
+
+::-webkit-scrollbar {
+	width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	background: rgba(var(--secondary), 1);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: rgba(var(--primary), 0.6);
+	border-radius: 2px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: rgba(var(--primary), 0.87);
+}
+
+body {
+	font-family: 'Open Sans', sans-serif;
+}
+
+.bg-transparent {
+	background-color: transparent;
+}
+
+/* Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+	display: none;
+}
+
+.no-scrollbar {
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+}
