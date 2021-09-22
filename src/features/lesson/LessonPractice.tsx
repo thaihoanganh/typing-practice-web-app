@@ -134,7 +134,6 @@ export const LessonPractice: React.FC = () => {
 						characterCursor={characterCursor}
 						wordCursor={wordCursor}
 						isReady={isReady}
-						isCheckAfterWord={false}
 						isCompleted={isCompleted}
 						data={data}
 					/>
