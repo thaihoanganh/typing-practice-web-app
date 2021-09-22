@@ -11,18 +11,38 @@ const customColor =
 	};
 
 module.exports = {
-	purge: ['./src/**/*.{js,ts,jsx,tsx}'],
+	purge: ['./pages/**/*.{js,ts,jsx,tsx}', './src/**/*.{js,ts,jsx,tsx}'],
 	darkMode: false,
 	theme: {
 		extend: {},
 		screens: {
 			desktop: '1024px',
 		},
+		gridTemplateColumns: {
+			5: 'repeat(5, minmax(0, 1fr))',
+			60: 'repeat(60, minmax(0, 1fr))',
+		},
+		gridColumn: {
+			'span-1': 'span 1 / span 1',
+			'span-2': 'span 2 / span 2',
+			'span-3': 'span 3 / span 3',
+			'span-4': 'span 4 / span 4',
+			'span-5': 'span 5 / span 5',
+			'span-6': 'span 6 / span 6',
+			'span-7': 'span 7 / span 7',
+			'span-8': 'span 8 / span 8',
+			'span-9': 'span 9 / span 9',
+			'span-10': 'span 10 / span 10',
+			'span-11': 'span 11 / span 11',
+			'span-12': 'span 12 / span 12',
+			'span-20': 'span 20 / span 20',
+		},
 		spacing: {
 			0: '0',
 			36: '36px',
 			48: '48px',
 			56: '56px',
+			280: '280px',
 			360: '360px',
 			640: '640px',
 			960: '960px',
