@@ -1,3 +1,2 @@
-export * from './LessonGuide';
+export * from './LessonController';
 export * from './LessonList';
-export * from './LessonPractice';
