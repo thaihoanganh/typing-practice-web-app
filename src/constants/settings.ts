@@ -1,6 +1,6 @@
 export const SETTING_STORAGE = 'settings';
 
-export const INITAL_SETTINGS = {
+export const INITIAL_SETTINGS = {
 	sound: {
 		primaryDefault: '188faab703f89045dc07a952ab5cf0c8',
 		selected: '188faab703f89045dc07a952ab5cf0c8',
@@ -92,7 +92,7 @@ export const INITAL_SETTINGS = {
 			'6ce1dcfd035ca15ff545832b6f4ad140': {
 				name: 'Tiếng việt',
 				isDefault: true,
-				value: 'abcdef',
+				value: 'enitrlsauodychgmpbkvwfzxql',
 			},
 			'2e7ee968210f40e464aab5420274ad53': {
 				name: 'Tuỳ chỉnh',
@@ -106,10 +106,11 @@ export const INITAL_SETTINGS = {
 		selected: '1da4b7e1a5a3fb394cfbbca37ac0530d',
 		options: {
 			'1da4b7e1a5a3fb394cfbbca37ac0530d': {
-				name: '1000 từ tiếng việt phổ biến',
+				name: '300 từ tiếng việt phổ biến',
 				isDefault: true,
 				value: {
-					words: 'một hai ba bốn năm',
+					words:
+						'khác sao các từ trên lỗi tờ sẻ thầy mỗi ngữ không điểm gió này máy đồ số những nên thực giáo năm phép chính toán xin đó lũ theo ký hà họ bóng dạ chị đầu quốc mực nam món xanh quảng lại tính giả chấm ra bác tớ tích bao sẽ trái mà lịch của nay bé nữa chia trường điện mới bay với hướng thế sinh đất đấu phúc dàng an nắng trang hóa bố im kính khăn tay huyện tức ngoài sống phần hạt vì bà đọc cả loại cũ ăn mưa phải hôm học dân lá đâu mẹ biển có lâu chăm nói cũng trắng như định thấp hoặc cổ bão xây chúng quả ngày nhà khánh tại lạnh bếp nhỏ cô đường trừ xinh trần bánh nhân vui đẹp nhạc mình cho lần chơi tham thành hoàn quần phương bút cậu cây nghĩ cuối vật uống gạo sau được thang đợi giành khóa ba vừa hội chẳng công cha nhất ở giờ tai việc tỉnh đến khó để báo câu đời hay giấy trong khóc tốt ngủ tôi ẩm ta phố ngọt người thương hỏi mì đơn bực xã gần kinh chim nội tuổi tắt lành hai hãy thử thì nó còn muốn tia trời cần da nước nghỉ nghệ áo nơi viết thật mùa cộng đỉnh chú do ông cuộc dưới tin dũng thuật tên chào một là rằng dùng cảm nhưng hả kĩ khi nóng con y thư giới suối sáo thấy cười đánh trước ảnh giúp mắt quê hoài rất sướng cố thay bướm đi cầu đặt dựng nga minh đỏ hợp đành tình lớn sơ dạy thi tháng gì vẻ ơn hạnh nào vâng dễ màu bơi gửi loài làm cơm bình cao sợ chi nếu anh huế mặt xa xe em hành sai vậy tivi trí bởi đúng hồng trình văn yêu hình đàn thêm nhé quá toàn',
 					isShuffle: true,
 					hasUppercase: false,
 				},
@@ -118,7 +119,8 @@ export const INITAL_SETTINGS = {
 				name: 'Tuỳ chỉnh',
 				isDefault: false,
 				value: {
-					words: 'một hai ba bốn năm',
+					words:
+						"was stand new last sun differ horse want land home right live act kind give water hand also so tell draw I are an any life find need in to head idea city how which together come like would well a walk put their mountain group me care sentence our must should could enough came children learn real music we same look face with watch she second and other by this grow were or very from let letter every near said play his is but does thing carry such press day for big round work on her up mark large cover get keep room much do name ask don't make science might not four who why left world use be father these once then boy the old while us too no more again run what fish over food sound both know will point back my add number friend own think change earth did great after feet two animal go way say still they even high eye answer school good you time thought of house sure him people now small as eat story man been down book here help stop line often paper river saw if few most mean show take night car base first close each never plant at always has three just white have through state than color begin seem hard self try open port page got when spell before only ease under set main between north far where air took farm long next made cut part place sea picture read late your turn some went example little out low follow wood move light it year study write start that men there off until side may those call many country one form began see can mile end hear mother about word tree found all them cause cross build had he",
 					isShuffle: true,
 					hasUppercase: false,
 				},
@@ -146,11 +148,11 @@ export const INITAL_SETTINGS = {
 				},
 			},
 			'1a485bff414a002094878f9303c6b611': {
-				name: '120 giây',
+				name: '100 từ',
 				isDefault: true,
 				value: {
-					amount: 120,
-					type: 'time',
+					amount: 100,
+					type: 'word',
 				},
 			},
 			f50e7dced8b239b1539a46efb301f030: {
