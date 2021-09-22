@@ -5,14 +5,14 @@ import { APP_STATUS } from '@/constants/app';
 import { getMostCommon } from '@/utils/array';
 import { round } from '@/utils/number';
 
-import { PracticeContext, INITAL_PRACTICE_STATE } from '.';
+import { PracticeContext, INITIAL_PRACTICE } from '.';
 
 export type ActionSetPractice = (payload: { data: string[][] }) => void;
 export const actionSetPractice: ActionSetPractice = ({ data }) => {
 	PracticeContext.setState(
 		produce(draft => {
 			draft.status = APP_STATUS.ready;
-			draft.entity = { ...INITAL_PRACTICE_STATE, data };
+			draft.entity = { ...INITIAL_PRACTICE, data };
 		})
 	);
 };
@@ -80,6 +80,7 @@ export const actionHandleTyping: ActionHandleTyping = ({ draftWord }) => {
 						draft.entity.isTyping = false;
 						draft.entity.statistics.timeEnd = getTimeNow;
 					}
+					draft.entity.characterCursor = 0;
 				} else if (draftWord.length < wordCurrent.length) {
 					draft.entity.characterCursor = draftWord.length;
 				}
@@ -131,6 +132,7 @@ export function actionPracticeStatistics() {
 			let graph: any = [];
 
 			let totalTimeWord = 0;
+			let timeStartWordTyping = 0;
 			words.map((word, wordIndex) => {
 				let charactersIncorrectOfWord: string[] = [];
 				totalCharacters += word.length;
@@ -143,9 +145,9 @@ export function actionPracticeStatistics() {
 					.filter((typedAt: any) => typeof typedAt === 'number');
 
 				if (totalTimeWordArray.length) {
-					totalTimeWord =
-						totalTimeWordArray[totalTimeWordArray.length - 1] / 1000 / 60 -
-						totalTimeWordArray[0] / 1000 / 60;
+					const timeEndWordTyping = totalTimeWordArray[totalTimeWordArray.length - 1] / 1000 / 60;
+					totalTimeWord = timeEndWordTyping - timeStartWordTyping;
+					timeStartWordTyping = timeEndWordTyping;
 				}
 
 				graph.push([wordIndex + 1, 1 / totalTimeWord, charactersIncorrectOfWord.length]);

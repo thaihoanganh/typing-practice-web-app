@@ -13,7 +13,7 @@ export interface IPracticeState {
 
 export const PracticeContext = createAppContext<IPracticeState>();
 
-export const INITAL_PRACTICE_STATE = {
+export const INITIAL_PRACTICE = {
 	characterCursor: 0,
 	wordCursor: 0,
 	isCompleted: false,
@@ -37,7 +37,7 @@ export const INITAL_PRACTICE_STATE = {
 export const PracticeProvider: React.FC = ({ children }) => {
 	const [state, setState] = useState<IPracticeState>({
 		status: APP_STATUS.loading,
-		entity: INITAL_PRACTICE_STATE,
+		entity: INITIAL_PRACTICE,
 	});
 
 	const exportValue = useMemo(() => ({ state, setState }), [state]);
