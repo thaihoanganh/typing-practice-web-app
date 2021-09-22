@@ -1,16 +1,16 @@
 import { APP_STATUS } from '@/constants/app';
-import { INITAL_SETTINGS, SETTING_STORAGE } from '@/constants/settings';
+import { INITIAL_SETTINGS, SETTING_STORAGE } from '@/constants/settings';
 
 import { clearLocalStorage, readLocalStorage, writeLocalStorage } from '@/helpers/localStorage';
 
 import { ISettingsEntity, SettingsContext, settingsSchema } from '.';
 
-type ILocalSettings = Record<keyof typeof INITAL_SETTINGS, any>;
+type ILocalSettings = Record<keyof typeof INITIAL_SETTINGS, any>;
 
 export type ActionConvertSettings = (payload: { settings: ILocalSettings }) => ISettingsEntity;
 
 export const actionConvertSettings: ActionConvertSettings = ({ settings }) => {
-	let settingState = { ...INITAL_SETTINGS };
+	let settingState = { ...INITIAL_SETTINGS };
 	let settingKey: keyof typeof settings;
 
 	for (settingKey in settings) {
@@ -46,12 +46,12 @@ export type ActionResetSettings = () => void;
 
 export const actionResetSettings: ActionResetSettings = () => {
 	let settings: Partial<ILocalSettings> = {};
-	let settingKey: keyof typeof INITAL_SETTINGS;
+	let settingKey: keyof typeof INITIAL_SETTINGS;
 
-	for (settingKey in INITAL_SETTINGS) {
-		if (Object.prototype.hasOwnProperty.call(INITAL_SETTINGS, settingKey)) {
-			const primaryDefault = INITAL_SETTINGS[settingKey].primaryDefault;
-			const options: any = INITAL_SETTINGS[settingKey].options;
+	for (settingKey in INITIAL_SETTINGS) {
+		if (Object.prototype.hasOwnProperty.call(INITIAL_SETTINGS, settingKey)) {
+			const primaryDefault = INITIAL_SETTINGS[settingKey].primaryDefault;
+			const options: any = INITIAL_SETTINGS[settingKey].options;
 
 			settings[settingKey] = {
 				selected: primaryDefault,
@@ -99,7 +99,7 @@ export const actionGetSettings: ActionGetSettings = () => {
 };
 
 export type ActionToggleSetting = (payload: {
-	settingName: keyof typeof INITAL_SETTINGS;
+	settingName: keyof typeof INITIAL_SETTINGS;
 	settingSelected: string;
 }) => {
 	error: null | string;
@@ -125,14 +125,14 @@ export const actionToggleSetting: ActionToggleSetting = ({ settingName, settingS
 		}
 	} catch (err) {
 		actionResetSettings();
-		SettingsContext.setState(prevState => ({ ...prevState, entity: INITAL_SETTINGS }));
+		SettingsContext.setState(prevState => ({ ...prevState, entity: INITIAL_SETTINGS }));
 
 		return { error: 'Something Wrong' };
 	}
 };
 
 export type ActionUpdateSetting = (payload: {
-	settingName: keyof typeof INITAL_SETTINGS;
+	settingName: keyof typeof INITIAL_SETTINGS;
 	settingKey: string;
 	settingValue: any;
 }) => {
@@ -151,24 +151,28 @@ export const actionUpdateSetting: ActionUpdateSetting = ({
 		let settings = actionConvertSettings({ settings: localSettings });
 
 		if (localSettings[settingName] && settings[settingName]?.options[settingKey]) {
-			settingsSchema.children[settingName].children['options'].strictParser({ settingValue });
+			try {
+				settingsSchema.children[settingName].children['options'].strictParser({ settingValue });
 
-			localSettings[settingName].options[settingKey].name = settingValue.name;
-			localSettings[settingName].options[settingKey].value = settingValue.value;
+				localSettings[settingName].options[settingKey].name = settingValue.name;
+				localSettings[settingName].options[settingKey].value = settingValue.value;
 
-			settings[settingName].options[settingKey].name = settingValue.name;
-			settings[settingName].options[settingKey].value = settingValue.value;
+				settings[settingName].options[settingKey].name = settingValue.name;
+				settings[settingName].options[settingKey].value = settingValue.value;
 
-			SettingsContext.setState(prevState => ({ ...prevState, entity: settings }));
-			writeLocalStorage(SETTING_STORAGE, localSettings);
+				SettingsContext.setState(prevState => ({ ...prevState, entity: settings }));
+				writeLocalStorage(SETTING_STORAGE, localSettings);
 
-			return { error: null };
+				return { error: null };
+			} catch (error) {
+				return { error: 'Something Wrong' };
+			}
 		} else {
-			throw new Error('error');
+			return { error: 'Something Wrong' };
 		}
-	} catch (err) {
+	} catch (error) {
 		actionResetSettings();
-		SettingsContext.setState(prevState => ({ ...prevState, entity: INITAL_SETTINGS }));
+		SettingsContext.setState(prevState => ({ ...prevState, entity: INITIAL_SETTINGS }));
 
 		return { error: 'Something Wrong' };
 	}

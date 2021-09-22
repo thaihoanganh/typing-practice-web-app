@@ -1,7 +1,7 @@
 import react, { useMemo, useState, useEffect } from 'react';
 
 import { APP_STATUS } from '@/constants/app';
-import { INITAL_SETTINGS } from '@/constants/settings';
+import { INITIAL_SETTINGS } from '@/constants/settings';
 
 import { createAppContext } from '@/helpers/context';
 
@@ -18,7 +18,7 @@ export const SettingsContext = createAppContext<ISettingsState>();
 export const SettingsProvider: React.FC = ({ children }) => {
 	const [state, setState] = useState<ISettingsState>({
 		status: APP_STATUS.loading,
-		entity: INITAL_SETTINGS,
+		entity: INITIAL_SETTINGS,
 	});
 
 	useEffect(() => {
