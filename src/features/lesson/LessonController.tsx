@@ -71,7 +71,7 @@ export const LessonController: React.FC = () => {
 	return (
 		<React.Fragment>
 			<div className="flex justify-end">
-				<Button disabled={!isCompleted} onClick={handleSetLessonData}>
+				<Button disabled={!isCompleted} color="secondary" onClick={handleSetLessonData}>
 					{statistics.wordsPerMinute >= wordsPerMinuteMin && statistics.accuracy >= accuracyMin
 						? 'Bài học tiếp theo'
 						: 'Luyện tập lại'}
